@@ -175,3 +175,32 @@ Lis ces fichiers au moment indiqué, pas avant : chacun ne sert que dans sa situ
 
 Quand tu rédiges une issue, un plan ou une PR, pars du modèle correspondant :
 `docs/templates/issue.md`, `docs/templates/plan.md`, `docs/templates/pr.md`.
+
+## 7. Quand t'arrêter et demander
+
+Arrête-toi et demande à l'humain dans ces cas :
+
+- **L'issue n'est pas claire.** L'objectif, le périmètre ou les critères
+  d'acceptation laissent place à plusieurs interprétations qui changent le
+  résultat.
+- **La tâche déborde.** Elle s'avère plus grosse ou différente de ce que dit
+  l'issue, ou touche des parties du code non prévues.
+- **Une règle d'or est en jeu.** La tâche semble exiger d'enfreindre une règle
+  de la section 5.
+- **Tu tournes en rond.** Après deux ou trois tentatives sur le même problème,
+  tu n'avances plus. Ne continue pas à essayer au hasard.
+- **Le résultat te surprend.** Un test, une commande ou le code se comportent
+  autrement que prévu, et tu ne sais pas expliquer pourquoi.
+- **Les consignes se contredisent.** L'issue, ce fichier, le code existant ou
+  la demande de l'humain ne disent pas la même chose.
+- **Il te manque un accès.** Une permission, un secret ou un service dont tu
+  as besoin n'est pas disponible. Ne cherche pas de moyen détourné.
+
+Pour demander, sois bref et précis :
+
+1. **Ce que tu as constaté**, avec les faits (message d'erreur, fichier, ligne).
+2. **Ce que tu as déjà essayé.**
+3. **Les options possibles**, avec celle que tu recommandes et pourquoi.
+
+Une bonne question permet à l'humain de répondre en une phrase. En attendant
+sa réponse, ne pars pas sur une option à sa place.

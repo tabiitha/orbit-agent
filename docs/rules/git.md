@@ -64,8 +64,8 @@ Refs: #<issue>
 - **Lie l'issue** avec `Closes #<numéro>` dans la description : elle se fermera
   à la fusion.
 - **Le titre suit le format de la première ligne des commits.**
-- **Ouvre la PR en brouillon** tant que la tâche n'est pas terminée
-  (section 4 d'`AGENTS.md`).
+- **Ouvre la PR quand la tâche est terminée** (section 4 d'`AGENTS.md`),
+  pas avant.
 - **Réponds aux retours de revue par de nouveaux commits**, sans réécrire
   l'historique.
 - **La fusion est faite par l'humain**, par défaut. Un agent ne fusionne une

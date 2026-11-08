@@ -25,7 +25,9 @@ AGENTS.md                         les règles lues à chaque session
 ├── ISSUE_TEMPLATE/issue.md       modèle d'issue
 └── pull_request_template.md      modèle de PR
 docs/
-├── workflow/issues.md            rédiger, valider et découper une issue
+├── workflow/
+│   ├── issues.md                 rédiger, valider et découper une issue
+│   └── graphe.md                 les étapes d'une issue et qui agit
 ├── rules/
 │   ├── git.md                    branches, commits, PR
 │   ├── tests.md                  quoi tester et comment
@@ -52,9 +54,10 @@ s'adapte et pose des questions pour ce qu'il ne peut pas déduire.
 
 1. Copier `AGENTS.md`, `docs/` et `.github/` à la racine du projet, sans
    écraser les fichiers existants.
-2. Remplir la section 2 d'`AGENTS.md` et `docs/context/architecture.md`, en
+2. Créer les labels `needs-validation` et `blocked` sur le dépôt GitHub.
+3. Remplir la section 2 d'`AGENTS.md` et `docs/context/architecture.md`, en
    suivant les consignes en commentaire.
-3. Relire et commiter.
+4. Relire et commiter.
 
 Si l'outil utilisé ne lit pas `AGENTS.md` de lui-même, le faire pointer vers ce
 fichier. Par exemple, un `CLAUDE.md` qui contient seulement `@AGENTS.md`.
@@ -80,7 +83,14 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
 3. **Copie `AGENTS.md`, `docs/` et `.github/`** depuis le clone. Ne copie pas
    ce `README.md`. N'écrase aucun fichier existant : en cas de conflit, montre
    les différences à l'humain et propose une fusion.
-4. **Remplis le contexte**, en suivant les consignes en commentaire de la
+4. **Crée les labels** utilisés par le graphe :
+   ```bash
+   gh label create needs-validation --description "Issue à valider avant de commencer"
+   gh label create blocked --description "En attente d'une réponse de l'humain"
+   ```
+   Si le projet n'est pas sur GitHub ou si `gh` n'est pas disponible,
+   signale-le à l'humain.
+5. **Remplis le contexte**, en suivant les consignes en commentaire de la
    section 2 d'`AGENTS.md` et de `docs/context/architecture.md` :
    - **Projet existant** : déduis tout du dépôt, exécute chaque commande avant
      de l'écrire, et marque « À confirmer » ce qui reste incertain.
@@ -88,14 +98,14 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
      Les commandes restent « À définir » et l'architecture reste vide.
 
    Supprime chaque commentaire de consignes une fois sa partie remplie.
-5. **Signale les écarts avec l'existant.** Si le projet a déjà ses propres
+6. **Signale les écarts avec l'existant.** Si le projet a déjà ses propres
    conventions (format de commit, nommage des branches, outils de test),
    présente-les à l'humain plutôt que de choisir entre elles et celles
    d'orbit-agent.
-6. **Fais lire `AGENTS.md` à ton outil.** S'il ne le lit pas de lui-même, crée
+7. **Fais lire `AGENTS.md` à ton outil.** S'il ne le lit pas de lui-même, crée
    le fichier qu'il attend, en le faisant pointer vers `AGENTS.md` plutôt
    qu'en recopiant son contenu.
-7. **Ne commite pas sur la branche principale.** Termine par un résumé : les
+8. **Ne commite pas sur la branche principale.** Termine par un résumé : les
    fichiers ajoutés, les conflits trouvés, les points « À confirmer » et les
    questions en attente. L'humain relit, puis décide de la suite.
-8. **Supprime le clone temporaire.**
+9. **Supprime le clone temporaire.**

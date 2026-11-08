@@ -166,6 +166,7 @@ Lis ces fichiers au moment indiqué, pas avant : chacun ne sert que dans sa situ
 | Quand | Lis |
 | --- | --- |
 | Avant tout changement, pour traiter ou rédiger une issue | `docs/workflow/issues.md` |
+| Pour savoir où en est une issue et qui agit à chaque étape | `docs/workflow/graphe.md` |
 | Avant de créer une branche, un commit ou une PR | `docs/rules/git.md` |
 | Avant d'écrire ou de modifier des tests | `docs/rules/tests.md` |
 | Si tu touches à l'authentification, aux secrets, aux données utilisateur ou aux entrées externes | `docs/rules/security.md` |

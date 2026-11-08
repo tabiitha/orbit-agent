@@ -27,7 +27,7 @@ AGENTS.md                         les règles lues à chaque session
 docs/
 ├── workflow/
 │   ├── issues.md                 rédiger, valider et découper une issue
-│   └── graphe.md                 les étapes d'une issue et qui agit
+│   └── graph.md                  les étapes d'une issue et qui agit
 ├── rules/
 │   ├── git.md                    branches, commits, PR
 │   ├── tests.md                  quoi tester et comment

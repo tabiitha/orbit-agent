@@ -167,6 +167,7 @@ Lis ces fichiers au moment indiqué, pas avant : chacun ne sert que dans sa situ
 | --- | --- |
 | Avant tout changement, pour traiter ou rédiger une issue | `docs/workflow/issues.md` |
 | Pour savoir où en est une issue et qui agit à chaque étape | `docs/workflow/graph.md` |
+| Quand une vérification, la CI ou une revue échoue, ou avant d'enchaîner les issues | `docs/workflow/loop.md` |
 | Avant de créer une branche, un commit ou une PR | `docs/rules/git.md` |
 | Avant d'écrire ou de modifier des tests | `docs/rules/tests.md` |
 | Si tu touches à l'authentification, aux secrets, aux données utilisateur ou aux entrées externes | `docs/rules/security.md` |
@@ -187,7 +188,7 @@ Arrête-toi et demande à l'humain dans ces cas :
   l'issue, ou touche des parties du code non prévues.
 - **Une règle d'or est en jeu.** La tâche semble exiger d'enfreindre une règle
   de la section 5.
-- **Tu tournes en rond.** Après deux ou trois tentatives sur le même problème,
+- **Tu tournes en rond.** Après trois tentatives sur le même problème,
   tu n'avances plus. Ne continue pas à essayer au hasard.
 - **Le résultat te surprend.** Un test, une commande ou le code se comportent
   autrement que prévu, et tu ne sais pas expliquer pourquoi.

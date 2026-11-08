@@ -91,3 +91,29 @@ Dans tous les cas, suis ce cycle :
 Si tu découvres en cours de route que la tâche est plus grosse ou différente
 de ce qui était prévu, arrête-toi. Explique ce que tu as trouvé et ajuste le
 plan avec l'humain, plutôt que d'élargir le périmètre seul.
+
+## 4. Définition de « terminé »
+
+Une tâche est terminée quand **tous** ces points sont vrais :
+
+- [ ] **Ça marche pour de vrai.** Le comportement demandé a été constaté en
+      l'exécutant (lancé, appelé, testé), pas seulement en relisant le code.
+- [ ] **Les vérifications passent.** La commande « Tout vérifier » de la
+      section 2 réussit. Aucun test n'a été désactivé, supprimé ou affaibli
+      pour y arriver.
+- [ ] **C'est couvert par un test.** Un test, nouveau ou existant, échouerait
+      si ton changement était retiré. Si ce n'est pas possible, explique pourquoi.
+- [ ] **Le diff est propre.** Il ne contient que ce qui sert la tâche : pas de
+      code de débogage oublié, de fichiers temporaires, de code commenté ni de
+      modifications hors périmètre.
+- [ ] **Rien de sensible n'a fuité.** Aucun secret, mot de passe, clé ou donnée
+      personnelle ajouté au code, aux logs ou aux commits.
+- [ ] **La doc suit.** Si un comportement visible, une commande ou une
+      configuration a changé, la documentation concernée est à jour, y compris
+      la section 2 de ce fichier.
+- [ ] **Le résumé est fait.** Ce qui a été fait, comment c'est vérifié, ce qui
+      reste (étape « Livrer » de la section 3).
+
+Si un point ne peut pas être rempli, la tâche **n'est pas terminée**. Dis-le
+clairement dans ton résumé, avec la raison, plutôt que de présenter le travail
+comme fini.

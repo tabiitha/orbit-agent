@@ -69,12 +69,20 @@ Adapte l'effort à la taille de la tâche :
 
 | Taille | Exemple | Plan |
 | --- | --- | --- |
-| Petite | Corriger un bug localisé, renommer, ajuster un texte | Aucun plan écrit |
-| Moyenne | Ajouter un comportement sur quelques fichiers | Plan court annoncé avant de commencer |
-| Grande | Nouvelle fonctionnalité, refonte, changement d'architecture | Plan écrit, validé par l'humain avant de coder |
+| Petite | Corriger un bug localisé, renommer, ajuster un texte | L'issue suffit |
+| Moyenne | Ajouter un comportement sur quelques fichiers | Plan court ajouté à l'issue |
+| Grande | Nouvelle fonctionnalité, refonte, changement d'architecture | Plan détaillé dans l'issue, validé par l'humain avant de coder |
 
 Dans tous les cas, suis ce cycle :
 
+0. **Partir d'une issue.** Tout changement commence par une issue. S'il n'y
+   en a pas, rédige-la à partir de `docs/templates/issue.md`, puis fais-la
+   valider avant de commencer :
+   - par défaut, par l'humain ;
+   - par un autre agent que toi, seulement si l'humain l'a demandé.
+
+   L'issue fixe l'objectif, le périmètre et les critères d'acceptation :
+   c'est ta référence jusqu'à la fin.
 1. **Comprendre.** Reformule l'objectif en une phrase. Lis la demande en
    entier, le code concerné et les règles qui s'appliquent. Repère ce qui
    est hors périmètre.
@@ -86,7 +94,7 @@ Dans tous les cas, suis ce cycle :
    le comportement réel, pas seulement que le code compile. Relis ton diff
    comme le ferait un relecteur.
 5. **Livrer.** Résume ce qui a été fait, comment tu l'as vérifié, et ce qui
-   reste à faire ou n'a pas pu être vérifié.
+   reste à faire ou n'a pas pu être vérifié, dans la PR, liée à l'issue.
 
 Si tu découvres en cours de route que la tâche est plus grosse ou différente
 de ce qui était prévu, arrête-toi. Explique ce que tu as trouvé et ajuste le
@@ -130,8 +138,9 @@ une, arrête-toi et demande.
    base ou équivalent.
 3. **Jamais de réécriture de l'historique partagé.** Pas de `push --force`,
    ni de rebase d'une branche déjà publiée.
-4. **Jamais de travail direct sur la branche principale.** Tout passe par
-   une branche dédiée, puis par une revue.
+4. **Jamais de changement sans issue, ni de travail direct sur la branche
+   principale.** Tout part d'une issue, passe par une branche dédiée, puis
+   par une PR liée à cette issue et relue.
 5. **Jamais d'action sur la production sans accord explicite.** Ni
    déploiement, ni migration de données réelles, ni modification de
    configuration en production.
@@ -150,3 +159,19 @@ une, arrête-toi et demande.
     le *quoi* que le code dit déjà. Une ligne suffit le plus souvent. Pas de
     commentaire qui paraphrase le code, raconte ta démarche ou laisse des
     notes pour toi-même.
+
+## 6. Où trouver quoi
+
+Lis ces fichiers au moment indiqué, pas avant : chacun ne sert que dans sa situation.
+
+| Quand | Lis |
+| --- | --- |
+| Avant tout changement, pour traiter ou rédiger une issue | `docs/workflow/issues.md` |
+| Avant de créer une branche, un commit ou une PR | `docs/rules/git.md` |
+| Avant d'écrire ou de modifier des tests | `docs/rules/tests.md` |
+| Si tu touches à l'authentification, aux secrets, aux données utilisateur ou aux entrées externes | `docs/rules/security.md` |
+| Avant de modifier une partie du code que tu ne connais pas | `docs/context/architecture.md` |
+| Avant un choix d'architecture ou l'ajout d'une dépendance | `docs/context/decisions/` |
+
+Quand tu rédiges une issue, un plan ou une PR, pars du modèle correspondant :
+`docs/templates/issue.md`, `docs/templates/plan.md`, `docs/templates/pr.md`.

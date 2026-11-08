@@ -21,6 +21,7 @@ Il ne dépend d'aucun langage ni d'aucun outil. Ce sont des fichiers Markdown,
 
 ```
 AGENTS.md                         les règles lues à chaque session
+CLAUDE.md                         pointe vers AGENTS.md, pour Claude Code
 .github/
 ├── ISSUE_TEMPLATE/issue.md       modèle d'issue
 └── pull_request_template.md      modèle de PR
@@ -53,15 +54,16 @@ s'adapte et pose des questions pour ce qu'il ne peut pas déduire.
 
 ### À la main
 
-1. Copier `AGENTS.md`, `docs/` et `.github/` à la racine du projet, sans
+1. Copier `AGENTS.md`, `CLAUDE.md`, `docs/` et `.github/` à la racine du projet, sans
    écraser les fichiers existants.
 2. Créer les labels `needs-validation` et `blocked` sur le dépôt GitHub.
 3. Remplir la section 2 d'`AGENTS.md` et `docs/context/architecture.md`, en
    suivant les consignes en commentaire.
 4. Relire et commiter.
 
-Si l'outil utilisé ne lit pas `AGENTS.md` de lui-même, le faire pointer vers ce
-fichier. Par exemple, un `CLAUDE.md` qui contient seulement `@AGENTS.md`.
+`CLAUDE.md` contient seulement `@AGENTS.md`, pour que Claude Code lise les
+mêmes règles. Si un autre outil ne lit pas `AGENTS.md` de lui-même, créer de la
+même façon le fichier qu'il attend.
 
 ## Adapter à un projet
 
@@ -81,7 +83,7 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
    `.github/pull_request_template.md`.
 2. **Travaille sur une branche** `chore/installe-orbit-agent`. Si le projet
    n'est pas encore un dépôt git, demande à l'humain avant de lancer `git init`.
-3. **Copie `AGENTS.md`, `docs/` et `.github/`** depuis le clone. Ne copie pas
+3. **Copie `AGENTS.md`, `CLAUDE.md`, `docs/` et `.github/`** depuis le clone. Ne copie pas
    ce `README.md`. N'écrase aucun fichier existant : en cas de conflit, montre
    les différences à l'humain et propose une fusion.
 4. **Crée les labels** utilisés par le graphe :

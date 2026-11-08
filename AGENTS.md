@@ -67,16 +67,15 @@ Dans les deux cas, reste court : le détail va dans docs/context/.
 
 Adapte l'effort à la taille de la tâche :
 
-| Taille | Exemple | Plan |
+| Taille | Exemple | Ce qu'il faut |
 | --- | --- | --- |
-| Petite | Corriger un bug localisé, renommer, ajuster un texte | L'issue suffit |
-| Moyenne | Ajouter un comportement sur quelques fichiers | Plan court ajouté à l'issue |
-| Grande | Nouvelle fonctionnalité, refonte, changement d'architecture | Plan détaillé dans l'issue, validé par l'humain avant de coder |
+| Petite | Corriger un bug, ajouter un comportement ciblé | Une issue |
+| Grande | Nouvelle fonctionnalité, refonte | Une issue parente, découpée en petites issues validées par l'humain avant de coder |
 
 Dans tous les cas, suis ce cycle :
 
 0. **Partir d'une issue.** Tout changement commence par une issue. S'il n'y
-   en a pas, rédige-la à partir de `docs/templates/issue.md`, puis fais-la
+   en a pas, rédige-la à partir de `.github/ISSUE_TEMPLATE/tache.md`, puis fais-la
    valider avant de commencer :
    - par défaut, par l'humain ;
    - par un autre agent que toi, seulement si l'humain l'a demandé.
@@ -86,7 +85,7 @@ Dans tous les cas, suis ce cycle :
 1. **Comprendre.** Reformule l'objectif en une phrase. Lis la demande en
    entier, le code concerné et les règles qui s'appliquent. Repère ce qui
    est hors périmètre.
-2. **Planifier.** Selon la taille : les étapes, les fichiers touchés et la
+2. **Planifier.** En quelques lignes : les étapes, les fichiers touchés et la
    façon de vérifier le résultat.
 3. **Réaliser.** Une étape à la fois. Après chaque étape importante, vérifie
    que rien n'est cassé avant de passer à la suivante.
@@ -97,8 +96,8 @@ Dans tous les cas, suis ce cycle :
    reste à faire ou n'a pas pu être vérifié, dans la PR, liée à l'issue.
 
 Si tu découvres en cours de route que la tâche est plus grosse ou différente
-de ce qui était prévu, arrête-toi. Explique ce que tu as trouvé et ajuste le
-plan avec l'humain, plutôt que d'élargir le périmètre seul.
+de ce qui était prévu, arrête-toi. Explique ce que tu as trouvé et propose à l'humain de réécrire
+ou de découper l'issue, plutôt que d'élargir le périmètre seul.
 
 ## 4. Définition de « terminé »
 
@@ -173,8 +172,8 @@ Lis ces fichiers au moment indiqué, pas avant : chacun ne sert que dans sa situ
 | Avant de modifier une partie du code que tu ne connais pas | `docs/context/architecture.md` |
 | Avant un choix d'architecture ou l'ajout d'une dépendance | `docs/context/decisions/` |
 
-Quand tu rédiges une issue, un plan ou une PR, pars du modèle correspondant :
-`docs/templates/issue.md`, `docs/templates/plan.md`, `docs/templates/pr.md`.
+Quand tu rédiges une issue ou une PR, pars du modèle correspondant :
+`.github/ISSUE_TEMPLATE/tache.md` ou `.github/pull_request_template.md`.
 
 ## 7. Quand t'arrêter et demander
 

@@ -75,7 +75,7 @@ Adapte l'effort à la taille de la tâche :
 Dans tous les cas, suis ce cycle :
 
 0. **Partir d'une issue.** Tout changement commence par une issue. S'il n'y
-   en a pas, rédige-la à partir de `.github/ISSUE_TEMPLATE/tache.md`, puis fais-la
+   en a pas, rédige-la à partir de `.github/ISSUE_TEMPLATE/issue.md`, puis fais-la
    valider avant de commencer :
    - par défaut, par l'humain ;
    - par un autre agent que toi, seulement si l'humain l'a demandé.
@@ -173,7 +173,7 @@ Lis ces fichiers au moment indiqué, pas avant : chacun ne sert que dans sa situ
 | Avant un choix d'architecture ou l'ajout d'une dépendance | `docs/context/decisions/` |
 
 Quand tu rédiges une issue ou une PR, pars du modèle correspondant :
-`.github/ISSUE_TEMPLATE/tache.md` ou `.github/pull_request_template.md`.
+`.github/ISSUE_TEMPLATE/issue.md` ou `.github/pull_request_template.md`.
 
 ## 7. Quand t'arrêter et demander
 

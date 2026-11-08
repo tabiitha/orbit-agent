@@ -62,3 +62,32 @@ Dans les deux cas, reste court : le détail va dans docs/context/.
 > Exemple : `src/routes/` (endpoints HTTP), `src/domain/` (logique métier), `src/db/` (accès aux données).
 
 **État** : [Prototype, en développement ou en production.]
+
+## 3. Comment tu travailles une tâche
+
+Adapte l'effort à la taille de la tâche :
+
+| Taille | Exemple | Plan |
+| --- | --- | --- |
+| Petite | Corriger un bug localisé, renommer, ajuster un texte | Aucun plan écrit |
+| Moyenne | Ajouter un comportement sur quelques fichiers | Plan court annoncé avant de commencer |
+| Grande | Nouvelle fonctionnalité, refonte, changement d'architecture | Plan écrit, validé par l'humain avant de coder |
+
+Dans tous les cas, suis ce cycle :
+
+1. **Comprendre.** Reformule l'objectif en une phrase. Lis la demande en
+   entier, le code concerné et les règles qui s'appliquent. Repère ce qui
+   est hors périmètre.
+2. **Planifier.** Selon la taille : les étapes, les fichiers touchés et la
+   façon de vérifier le résultat.
+3. **Réaliser.** Une étape à la fois. Après chaque étape importante, vérifie
+   que rien n'est cassé avant de passer à la suivante.
+4. **Vérifier.** Lance la commande « Tout vérifier » de la section 2. Teste
+   le comportement réel, pas seulement que le code compile. Relis ton diff
+   comme le ferait un relecteur.
+5. **Livrer.** Résume ce qui a été fait, comment tu l'as vérifié, et ce qui
+   reste à faire ou n'a pas pu être vérifié.
+
+Si tu découvres en cours de route que la tâche est plus grosse ou différente
+de ce qui était prévu, arrête-toi. Explique ce que tu as trouvé et ajuste le
+plan avec l'humain, plutôt que d'élargir le périmètre seul.

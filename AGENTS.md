@@ -32,12 +32,12 @@ Si le projet existe déjà :
   (package.json, pyproject.toml, Cargo.toml, go.mod…), Makefile, scripts,
   configuration de la CI.
 - Exécute chaque commande avant de l'écrire ici, pour vérifier qu'elle marche.
-- Ce que tu ne peux pas déduire avec certitude : écris « À confirmer » et
+- Ce que tu ne peux pas déduire avec certitude : écris `TBC` et
   demande à l'humain.
 
 Si le projet n'existe pas encore :
 - Demande à l'humain le but du projet, son public et la stack souhaitée.
-- Remplis avec ses réponses. Les commandes restent « À définir » jusqu'à
+- Remplis avec ses réponses. Les commandes restent `TBD` jusqu'à
   l'initialisation du projet ; mets-les à jour à ce moment-là.
 
 Dans les deux cas, reste court : le détail va dans docs/context/.
@@ -69,8 +69,8 @@ Adapte l'effort à la taille de la tâche :
 
 | Taille | Exemple | Ce qu'il faut |
 | --- | --- | --- |
-| Petite | Corriger un bug, ajouter un comportement ciblé | Une issue |
-| Grande | Nouvelle fonctionnalité, refonte | Une issue parente, découpée en petites issues validées par l'humain avant de coder |
+| Small | Corriger un bug, ajouter un comportement ciblé | Une issue |
+| Large | Nouvelle fonctionnalité, refonte | Une parent issue, découpée en sub-issues validées par l'humain avant de coder |
 
 Dans tous les cas, suis ce cycle :
 
@@ -80,18 +80,18 @@ Dans tous les cas, suis ce cycle :
    - par défaut, par l'humain ;
    - par un autre agent que toi, seulement si l'humain l'a demandé.
 
-   L'issue fixe l'objectif, le périmètre et les critères d'acceptation :
+   L'issue fixe l'objectif, le périmètre et les acceptance criteria :
    c'est ta référence jusqu'à la fin.
 1. **Comprendre.** Reformule l'objectif en une phrase. Lis la demande en
    entier, le code concerné et les règles qui s'appliquent. Repère ce qui
-   est hors périmètre.
+   est out of scope.
 2. **Planifier.** En quelques lignes : les étapes, les fichiers touchés et la
    façon de vérifier le résultat.
 3. **Réaliser.** Une étape à la fois. Après chaque étape importante, vérifie
    que rien n'est cassé avant de passer à la suivante.
 4. **Vérifier.** Lance la commande `check` de la section 2. Teste
    le comportement réel, pas seulement que le code compile. Relis ton diff
-   comme le ferait un relecteur.
+   comme le ferait un reviewer.
 5. **Livrer.** Résume ce qui a été fait, comment tu l'as vérifié, et ce qui
    reste à faire ou n'a pas pu être vérifié, dans la PR, liée à l'issue.
 
@@ -99,7 +99,7 @@ Si tu découvres en cours de route que la tâche est plus grosse ou différente
 de ce qui était prévu, arrête-toi. Explique ce que tu as trouvé et propose à l'humain de réécrire
 ou de découper l'issue, plutôt que d'élargir le périmètre seul.
 
-## 4. Définition de « terminé »
+## 4. Definition of Done
 
 Une tâche est terminée quand **tous** ces points sont vrais :
 
@@ -112,7 +112,7 @@ Une tâche est terminée quand **tous** ces points sont vrais :
       si ton changement était retiré. Si ce n'est pas possible, explique pourquoi.
 - [ ] **Le diff est propre.** Il ne contient que ce qui sert la tâche : pas de
       code de débogage oublié, de fichiers temporaires, de code commenté ni de
-      modifications hors périmètre.
+      modifications out of scope.
 - [ ] **Rien de sensible n'a fuité.** Aucun secret, mot de passe, clé ou donnée
       personnelle ajouté au code, aux logs ou aux commits.
 - [ ] **La doc suit.** Si un comportement visible, une commande ou une
@@ -139,7 +139,7 @@ une, arrête-toi et demande.
    ni de rebase d'une branche déjà publiée.
 4. **Jamais de changement sans issue, ni de travail direct sur la branche
    principale.** Tout part d'une issue, passe par une branche dédiée, puis
-   par une PR liée à cette issue et relue.
+   par une PR liée à cette issue et passée en review.
 5. **Jamais d'action sur la production sans accord explicite.** Ni
    déploiement, ni migration de données réelles, ni modification de
    configuration en production.
@@ -167,7 +167,7 @@ Lis ces fichiers au moment indiqué, pas avant : chacun ne sert que dans sa situ
 | --- | --- |
 | Avant tout changement, pour traiter ou rédiger une issue | `docs/workflow/issues.md` |
 | Pour savoir où en est une issue et qui agit à chaque étape | `docs/workflow/graph.md` |
-| Quand une vérification, la CI ou une revue échoue, ou avant d'enchaîner les issues | `docs/workflow/loop.md` |
+| Quand une vérification, la CI ou une review échoue, ou avant d'enchaîner les issues | `docs/workflow/loop.md` |
 | Avant de créer une branche, un commit ou une PR | `docs/rules/git.md` |
 | Avant d'écrire ou de modifier des tests | `docs/rules/tests.md` |
 | Si tu touches à l'authentification, aux secrets, aux données utilisateur ou aux entrées externes | `docs/rules/security.md` |

@@ -5,7 +5,7 @@
 - **Le comportement, pas l'implémentation.** Teste ce que le code fait vu de
   l'extérieur (entrées, sorties, effets), pas la façon dont il le fait. Un
   refactor ne devrait pas casser un bon test.
-- **Chaque critère d'acceptation de l'issue** est couvert par au moins un test.
+- **Chaque acceptance criterion de l'issue** est couvert par au moins un test.
 - **Les cas limites** : valeurs vides, bornes, erreurs attendues, entrées
   invalides.
 - **Pour un bug, d'abord le test.** Écris un test qui reproduit le bug et
@@ -23,7 +23,7 @@
 - **Reproductible** : même résultat à chaque lancement. Contrôle ce qui varie
   (date, hasard, réseau) au lieu d'en dépendre.
 - **Isolé du monde réel** : aucun service externe réel, aucune donnée de
-  production. Remplace-les par des doublures à la frontière du système.
+  production. Remplace-les par des test doubles à la frontière du système.
 - **Rapide** : un test lent finit par ne plus être lancé.
 
 ## Prouver qu'un test sert à quelque chose

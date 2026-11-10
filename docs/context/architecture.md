@@ -4,7 +4,7 @@
 CONSIGNES POUR L'AGENT : remplis ce fichier à la mise en place, puis supprime ce commentaire.
 
 Si le projet existe déjà : déduis chaque partie du code et de la configuration.
-Ce que tu ne peux pas déduire avec certitude : écris « À confirmer » et
+Ce que tu ne peux pas déduire avec certitude : écris `TBC` et
 demande à l'humain.
 
 Si le projet n'existe pas encore : laisse les parties vides et remplis-les au

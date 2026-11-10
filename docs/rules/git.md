@@ -2,10 +2,10 @@
 
 ## Branches
 
-- **Une branche = une issue.** Crée-la depuis la branche principale à jour.
+- **Une branche = une issue.** Crée-la depuis la main branch à jour.
 - **Nom** : `<type>/<numéro>-<description-courte>`.
   > Exemple : `fix/12-chevauchement-creneaux`
-- **Pour la mettre à jour**, fusionne la branche principale dedans. Ne la
+- **Pour la mettre à jour**, merge la main branch dedans. Ne la
   rebase que si elle n'a jamais été poussée (règle d'or 3).
 
 ## Commits
@@ -62,11 +62,11 @@ Refs: #<issue>
 
 - **Une PR = une issue.** Pars du modèle `.github/pull_request_template.md`.
 - **Lie l'issue** avec `Closes #<numéro>` dans la description : elle se fermera
-  à la fusion.
+  au merge.
 - **Le titre suit le format de la première ligne des commits.**
 - **Ouvre la PR quand la tâche est terminée** (section 4 d'`AGENTS.md`),
   pas avant.
-- **Réponds aux retours de revue par de nouveaux commits**, sans réécrire
+- **Réponds aux retours de review par de nouveaux commits**, sans réécrire
   l'historique.
-- **La fusion est faite par l'humain**, par défaut. Un agent ne fusionne une
+- **Le merge est fait par l'humain**, par défaut. Un agent ne merge une
   PR que si l'humain l'a demandé.

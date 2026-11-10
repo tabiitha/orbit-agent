@@ -10,7 +10,7 @@ Il ne dépend d'aucun langage ni d'aucun outil. Ce sont des fichiers Markdown,
 ## Principe
 
 - **`AGENTS.md`** est court et lu à chaque session : la posture, le projet, le
-  cycle de travail, la définition de « terminé », les règles d'or et quand
+  cycle de travail, la Definition of Done, les règles d'or et quand
   s'arrêter.
 - **`docs/`** contient le détail, lu seulement quand il sert : `AGENTS.md`
   indique quel fichier lire et à quel moment.
@@ -50,8 +50,8 @@ l'agent : `.github/workflows/orbit.yml` les vérifie sur chaque PR.
 - Aucun secret n'est présent dans le code.
 - La commande `check` du projet passe (à compléter à l'installation).
 
-Avec la protection de la branche principale, une PR qui ne passe pas ces
-vérifications ne peut pas être fusionnée.
+Avec la protection de la main branch, une PR qui ne passe pas ces
+vérifications ne peut pas être mergée.
 
 ## Installation
 
@@ -74,7 +74,7 @@ s'adapte et pose des questions pour ce qu'il ne peut pas déduire.
 3. Remplir la section 2 d'`AGENTS.md` et `docs/context/architecture.md`, en
    suivant les consignes en commentaire.
 4. Compléter l'étape `check` de `.github/workflows/orbit.yml`.
-5. Protéger la branche principale (*Settings → Rules → Rulesets*) : exiger
+5. Protéger la main branch (*Settings → Rules → Rulesets*) : exiger
    une PR, exiger que le check `checks` passe, interdire le `push --force`.
 6. Relire et commiter.
 
@@ -98,7 +98,7 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
    s'il démarre. Repère les fichiers qui entreraient en conflit : `AGENTS.md`,
    `CLAUDE.md` ou équivalent, `docs/`, `.github/ISSUE_TEMPLATE/`,
    `.github/pull_request_template.md`.
-2. **Travaille sur une branche** `chore/installe-orbit-agent`. Si le projet
+2. **Travaille sur une branche** `chore/install-orbit-agent`. Si le projet
    n'est pas encore un dépôt git, demande à l'humain avant de lancer `git init`.
 3. **Copie `AGENTS.md`, `CLAUDE.md`, `docs/` et `.github/`** depuis le clone. Ne copie pas
    ce `README.md`. N'écrase aucun fichier existant : en cas de conflit, montre
@@ -113,19 +113,19 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
 5. **Remplis le contexte**, en suivant les consignes en commentaire de la
    section 2 d'`AGENTS.md` et de `docs/context/architecture.md` :
    - **Projet existant** : déduis tout du dépôt, exécute chaque commande avant
-     de l'écrire, et marque « À confirmer » ce qui reste incertain.
+     de l'écrire, et marque `TBC` ce qui reste incertain.
    - **Nouveau projet** : demande à l'humain le but, le public et la stack.
-     Les commandes restent « À définir » et l'architecture reste vide.
+     Les commandes restent `TBD` et l'architecture reste vide.
 
    Supprime chaque commentaire de consignes une fois sa partie remplie.
 6. **Complète la CI.** Dans `.github/workflows/orbit.yml`, remplace l'étape
    `check` en commentaire par l'installation de la stack et la
    commande `check` de la section 2. Si les commandes sont encore
-   « À définir », laisse l'étape en commentaire et signale-le.
-7. **Propose la protection de la branche principale** : PR obligatoire, check
+   `TBD`, laisse l'étape en commentaire et signale-le.
+7. **Propose la protection de la main branch** : PR obligatoire, check
    `checks` requis, `push --force` interdit. Ne l'active toi-même que si
-   l'humain le demande. N'exige pas de relecture approuvée si les agents
-   utilisent le compte GitHub de l'humain : il ne pourrait plus fusionner
+   l'humain le demande. N'exige pas de review approuvée si les agents
+   utilisent le compte GitHub de l'humain : il ne pourrait plus merger
    leurs PR.
 8. **Signale les écarts avec l'existant.** Si le projet a déjà ses propres
    conventions (format de commit, nommage des branches, outils de test),
@@ -134,7 +134,7 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
 9. **Fais lire `AGENTS.md` à ton outil.** S'il ne le lit pas de lui-même, crée
    le fichier qu'il attend, en le faisant pointer vers `AGENTS.md` plutôt
    qu'en recopiant son contenu.
-10. **Ne commite pas sur la branche principale.** Termine par un résumé : les
-   fichiers ajoutés, les conflits trouvés, les points « À confirmer » et les
+10. **Ne commite pas sur la main branch.** Termine par un résumé : les
+   fichiers ajoutés, les conflits trouvés, les points `TBC` et les
    questions en attente. L'humain relit, puis décide de la suite.
 11. **Supprime le clone temporaire.**

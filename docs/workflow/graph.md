@@ -1,6 +1,6 @@
 # Le graphe
 
-Le parcours d'une issue, de sa rédaction à sa fusion : les étapes, qui agit,
+Le parcours d'une issue, de sa rédaction à son merge : les étapes, qui agit,
 ce qui fait passer à l'étape suivante, et comment on le voit sur GitHub.
 
 ```mermaid
@@ -11,12 +11,12 @@ stateDiagram-v2
     NeedsValidation --> Ready: validée
     Ready --> InProgress: prise, dépendances terminées
     InProgress --> InProgress: vérification échouée
-    InProgress --> InReview: « terminé » rempli, PR ouverte
+    InProgress --> InReview: Definition of Done remplie, PR ouverte
     InProgress --> Blocked: cas de la section 7
     Blocked --> InProgress: l'humain a répondu
     Blocked --> NeedsValidation: issue à réécrire ou découper
     InReview --> InProgress: changements demandés ou CI rouge
-    InReview --> Done: approuvée et fusionnée
+    InReview --> Done: approuvée et mergée
     Done --> [*]
 ```
 
@@ -41,12 +41,12 @@ stateDiagram-v2
 
 ### In progress
 
-- **Sur GitHub** : issue assignée, sans PR. Après une revue, la PR reste
+- **Sur GitHub** : issue assignée, sans PR. Après une review, la PR reste
   ouverte avec des changements demandés.
 - **Qui agit** : l'agent à qui l'issue est confiée.
 - **Ce qu'il fait** : le cycle de la section 3 d'`AGENTS.md`. Si une
   vérification échoue, il corrige et recommence.
-- **Pour en sortir** : la définition de « terminé » est remplie, l'agent ouvre
+- **Pour en sortir** : la Definition of Done est remplie, l'agent ouvre
   la PR → **In review**. Un cas de la section 7 → **Blocked**.
 
 ### Blocked
@@ -61,17 +61,17 @@ stateDiagram-v2
 ### In review
 
 - **Sur GitHub** : PR ouverte, liée par `Closes #N`.
-- **Qui agit** : la relecture est faite par l'humain par défaut, ou par un
+- **Qui agit** : la review est faite par l'humain par défaut, ou par un
   autre agent que l'auteur de la PR si l'humain l'a demandé. L'auteur traite
   les retours.
 - **Pour en sortir** : des changements sont demandés ou la CI échoue →
-  **In progress**, sur la même PR. Revue approuvée et CI verte → fusion →
+  **In progress**, sur la même PR. Review approuvée et CI verte → merge →
   **Done**.
 
 ### Done
 
-- **Sur GitHub** : PR fusionnée, issue fermée automatiquement.
-- **Qui agit** : la fusion est faite par l'humain par défaut, ou par un agent
+- **Sur GitHub** : PR mergée, issue fermée automatiquement.
+- **Qui agit** : le merge est fait par l'humain par défaut, ou par un agent
   si l'humain l'a demandé.
 
 ## Règles
@@ -82,4 +82,4 @@ stateDiagram-v2
 - **Plusieurs agents peuvent avancer en parallèle** sur des issues
   indépendantes, chacun avec sa branche et sa copie de travail.
 - **L'humain peut fermer une issue à tout moment** : le parcours s'arrête là.
-- **Une issue parente est terminée** quand toutes ses sous-issues le sont.
+- **Une parent issue est terminée** quand toutes ses sub-issues le sont.

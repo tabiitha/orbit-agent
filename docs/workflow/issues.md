@@ -14,25 +14,25 @@ Pour rédiger une issue, pars du modèle `.github/ISSUE_TEMPLATE/issue.md`.
   elle est trop petite.
 - **Courte.** Va à l'essentiel : si elle tient en deux lignes, écris deux
   lignes. Pas de contexte qu'on trouve déjà dans le code ou dans `AGENTS.md`.
-- **Vérifiable.** Les critères d'acceptation sont obligatoires : chacun doit
+- **Vérifiable.** Les acceptance criteria sont obligatoires : chacun doit
   pouvoir être constaté ou testé.
 
 Exemple d'issue suffisante :
 
 > **Objectif** : Refuser une réservation qui chevauche un créneau déjà pris.
 >
-> **Critères d'acceptation**
+> **Acceptance criteria**
 > - [ ] Une réservation qui chevauche un créneau existant renvoie une erreur 409.
 > - [ ] Une réservation qui commence pile à la fin d'une autre est acceptée.
 
 ## Découper une grande tâche
 
-Une tâche trop grosse pour une seule issue devient une **issue parente** :
+Une tâche trop grosse pour une seule issue devient une **parent issue** :
 
-1. L'issue parente décrit l'objectif d'ensemble, en quelques lignes.
-2. Elle est découpée en **sous-issues**, chacune petite et livrable seule,
+1. La parent issue décrit l'objectif d'ensemble, en quelques lignes.
+2. Elle est découpée en **sub-issues**, chacune petite et livrable seule,
    sans casser le projet.
-3. L'ordre des sous-issues est indiqué quand l'une dépend d'une autre.
+3. L'ordre des sub-issues est indiqué quand l'une dépend d'une autre.
 4. L'humain valide le découpage avant le début du code.
 
 ## Faire valider une issue
@@ -49,7 +49,7 @@ trop grosse, propose une reformulation ou un découpage avant de commencer.
 
 - **C'est ta référence.** L'objectif, les critères et les contraintes de
   l'issue cadrent tout ton travail.
-- **Ce que tu découvres hors périmètre** (bug, amélioration, dette) devient une
+- **Ce que tu découvres out of scope** (bug, amélioration, dette) devient une
   nouvelle issue proposée, pas un changement glissé dans la PR en cours.
 - **Si l'issue doit changer**, parce qu'elle est fausse, incomplète ou trop
   grosse, arrête-toi et vois-le avec l'humain. Ne la modifie pas seul.
@@ -58,6 +58,6 @@ trop grosse, propose une reformulation ou un découpage avant de commencer.
 
 ## Fermer une issue
 
-L'issue est fermée par la PR qui la réalise, une fois fusionnée. La PR la
+L'issue est fermée par la PR qui la réalise, une fois mergée. La PR la
 référence (voir `docs/rules/git.md`) et montre que chaque critère
 d'acceptation est rempli.

@@ -1,7 +1,7 @@
 # NNNN. [Titre court de la décision]
 
 **Date** : [AAAA-MM-JJ]
-**Statut** : [Proposée, Acceptée ou Remplacée par NNNN]
+**Statut** : [Proposed, Accepted ou Superseded by NNNN]
 
 ## Contexte
 

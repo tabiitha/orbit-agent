@@ -1,5 +1,5 @@
 ---
-name: Tâche
+name: Task
 about: Une issue = une petite tâche, un seul résultat vérifiable
 title: ""
 labels: []
@@ -9,7 +9,7 @@ labels: []
 
 <!-- Une ou deux phrases : ce qui doit changer, et pourquoi. -->
 
-## Critères d'acceptation
+## Acceptance criteria
 
 <!-- Chaque critère doit pouvoir être constaté ou testé. -->
 - [ ]
@@ -24,6 +24,6 @@ Pour un bug : étapes pour le reproduire, résultat attendu, résultat obtenu.
 Règles propres à cette tâche : fichiers à ne pas toucher, compatibilité à
 garder, dépendance interdite…
 
-## Hors périmètre
+## Out of scope
 Ce qui pourrait sembler inclus mais ne l'est pas.
 -->

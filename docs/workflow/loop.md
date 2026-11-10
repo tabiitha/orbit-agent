@@ -24,15 +24,15 @@ comment recommencer, et quand s'arrêter.
 - **Ne relance pas la CI en espérant qu'elle passe.** Un test instable mérite
   sa propre issue (voir `docs/rules/tests.md`).
 - **Si l'échec ne vient pas de ton changement**, signale-le sans le corriger
-  dans ta PR : c'est hors périmètre.
+  dans ta PR : c'est out of scope.
 
-## La boucle de revue
+## La boucle de review
 
 *In review → In progress : des changements sont demandés.*
 
 - **Traite chaque remarque** : corrige, ou réponds avec ta raison si tu n'es
   pas d'accord. N'en ignore aucune en silence.
-- **Réponds à chaque commentaire**, puis redemande la relecture.
+- **Réponds à chaque commentaire**, puis redemande une review.
 - **Si la même remarque revient ou si le désaccord persiste**, l'humain
   tranche.
 
@@ -49,8 +49,8 @@ comment recommencer, et quand s'arrêter.
 
 - **Seulement si l'humain t'a demandé d'enchaîner.** Par défaut, tu t'arrêtes
   après une issue.
-- **L'ordre** : d'abord les dépendances, puis l'ordre des sous-issues de
-  l'issue parente.
+- **L'ordre** : d'abord les dépendances, puis l'ordre des sub-issues de
+  la parent issue.
 - **Si une issue passe en Blocked**, continue avec une autre issue
   indépendante plutôt que d'attendre.
 - **Arrête-toi** quand il n'y a plus d'issue Ready, ou quand la limite fixée

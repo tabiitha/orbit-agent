@@ -48,7 +48,7 @@ l'agent : `.github/workflows/orbit.yml` les vérifie sur chaque PR.
 - La description contient `Closes #N`.
 - Le titre et les commits suivent Conventional Commits.
 - Aucun secret n'est présent dans le code.
-- La commande « Tout vérifier » du projet passe (à compléter à l'installation).
+- La commande `check` du projet passe (à compléter à l'installation).
 
 Avec la protection de la branche principale, une PR qui ne passe pas ces
 vérifications ne peut pas être fusionnée.
@@ -73,7 +73,7 @@ s'adapte et pose des questions pour ce qu'il ne peut pas déduire.
 2. Créer les labels `needs-validation` et `blocked` sur le dépôt GitHub.
 3. Remplir la section 2 d'`AGENTS.md` et `docs/context/architecture.md`, en
    suivant les consignes en commentaire.
-4. Compléter l'étape « Tout vérifier » de `.github/workflows/orbit.yml`.
+4. Compléter l'étape `check` de `.github/workflows/orbit.yml`.
 5. Protéger la branche principale (*Settings → Rules → Rulesets*) : exiger
    une PR, exiger que le check `checks` passe, interdire le `push --force`.
 6. Relire et commiter.
@@ -119,8 +119,8 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
 
    Supprime chaque commentaire de consignes une fois sa partie remplie.
 6. **Complète la CI.** Dans `.github/workflows/orbit.yml`, remplace l'étape
-   « Tout vérifier » en commentaire par l'installation de la stack et la
-   commande « Tout vérifier » de la section 2. Si les commandes sont encore
+   `check` en commentaire par l'installation de la stack et la
+   commande `check` de la section 2. Si les commandes sont encore
    « À définir », laisse l'étape en commentaire et signale-le.
 7. **Propose la protection de la branche principale** : PR obligatoire, check
    `checks` requis, `push --force` interdit. Ne l'active toi-même que si

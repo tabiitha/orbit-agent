@@ -44,5 +44,5 @@ encore, il ne teste pas ce que tu crois.
 ## Quand lancer les tests
 
 - **Pendant le travail** : les tests liés à ce que tu modifies, souvent.
-- **Avant de livrer** : la commande « Tout vérifier » de la section 2
+- **Avant de livrer** : la commande `check` de la section 2
   d'`AGENTS.md`, en entier.

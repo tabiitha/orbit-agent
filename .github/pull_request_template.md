@@ -8,7 +8,7 @@ Closes #
 
 <!-- Comment tu l'as vérifié : commandes lancées, comportement constaté. -->
 
-- [ ] La commande « Tout vérifier » passe.
+- [ ] La commande `check` passe.
 - [ ] Chaque critère d'acceptation de l'issue est rempli.
 
 <!-- Sections facultatives : ajoute-les seulement si elles s'appliquent.

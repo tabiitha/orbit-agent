@@ -54,7 +54,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # À remplir à l'installation : la commande « Tout vérifier » de la
+      # À remplir à l'installation : la commande `check` de la
       # section 2 d'AGENTS.md, précédée de l'installation de la stack.
-      # - name: Tout vérifier
+      # - name: Check
       #   run: npm run check

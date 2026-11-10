@@ -56,7 +56,7 @@ Dans les deux cas, reste court : le détail va dans docs/context/.
 | Installer | [ex. `npm install`] |
 | Lancer en local | [ex. `npm run dev`] |
 | Tester | [ex. `npm test`] |
-| Tout vérifier (lint, types, tests) | [ex. `npm run check`] |
+| Check (lint, types, tests) | [ex. `npm run check`] |
 
 **Organisation du code** : [Les 3 à 5 dossiers principaux et leur rôle.]
 > Exemple : `src/routes/` (endpoints HTTP), `src/domain/` (logique métier), `src/db/` (accès aux données).
@@ -89,7 +89,7 @@ Dans tous les cas, suis ce cycle :
    façon de vérifier le résultat.
 3. **Réaliser.** Une étape à la fois. Après chaque étape importante, vérifie
    que rien n'est cassé avant de passer à la suivante.
-4. **Vérifier.** Lance la commande « Tout vérifier » de la section 2. Teste
+4. **Vérifier.** Lance la commande `check` de la section 2. Teste
    le comportement réel, pas seulement que le code compile. Relis ton diff
    comme le ferait un relecteur.
 5. **Livrer.** Résume ce qui a été fait, comment tu l'as vérifié, et ce qui
@@ -105,7 +105,7 @@ Une tâche est terminée quand **tous** ces points sont vrais :
 
 - [ ] **Ça marche pour de vrai.** Le comportement demandé a été constaté en
       l'exécutant (lancé, appelé, testé), pas seulement en relisant le code.
-- [ ] **Les vérifications passent.** La commande « Tout vérifier » de la
+- [ ] **Les vérifications passent.** La commande `check` de la
       section 2 réussit. Aucun test n'a été désactivé, supprimé ou affaibli
       pour y arriver.
 - [ ] **C'est couvert par un test.** Un test, nouveau ou existant, échouerait

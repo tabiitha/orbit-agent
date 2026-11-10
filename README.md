@@ -24,7 +24,8 @@ AGENTS.md                         les règles lues à chaque session
 CLAUDE.md                         pointe vers AGENTS.md, pour Claude Code
 .github/
 ├── ISSUE_TEMPLATE/issue.md       modèle d'issue
-└── pull_request_template.md      modèle de PR
+├── pull_request_template.md      modèle de PR
+└── workflows/orbit.yml           vérifications automatiques des PR
 docs/
 ├── workflow/
 │   ├── issues.md                 rédiger, valider et découper une issue
@@ -38,6 +39,19 @@ docs/
     ├── architecture.md
     └── decisions/
 ```
+
+## Vérifications automatiques
+
+Les règles critiques ne reposent pas seulement sur la bonne volonté de
+l'agent : `.github/workflows/orbit.yml` les vérifie sur chaque PR.
+
+- La description contient `Closes #N`.
+- Le titre et les commits suivent Conventional Commits.
+- Aucun secret n'est présent dans le code.
+- La commande « Tout vérifier » du projet passe (à compléter à l'installation).
+
+Avec la protection de la branche principale, une PR qui ne passe pas ces
+vérifications ne peut pas être fusionnée.
 
 ## Installation
 
@@ -59,7 +73,10 @@ s'adapte et pose des questions pour ce qu'il ne peut pas déduire.
 2. Créer les labels `needs-validation` et `blocked` sur le dépôt GitHub.
 3. Remplir la section 2 d'`AGENTS.md` et `docs/context/architecture.md`, en
    suivant les consignes en commentaire.
-4. Relire et commiter.
+4. Compléter l'étape « Tout vérifier » de `.github/workflows/orbit.yml`.
+5. Protéger la branche principale (*Settings → Rules → Rulesets*) : exiger
+   une PR, exiger que le check `checks` passe, interdire le `push --force`.
+6. Relire et commiter.
 
 `CLAUDE.md` contient seulement `@AGENTS.md`, pour que Claude Code lise les
 mêmes règles. Si un autre outil ne lit pas `AGENTS.md` de lui-même, créer de la
@@ -101,14 +118,23 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
      Les commandes restent « À définir » et l'architecture reste vide.
 
    Supprime chaque commentaire de consignes une fois sa partie remplie.
-6. **Signale les écarts avec l'existant.** Si le projet a déjà ses propres
+6. **Complète la CI.** Dans `.github/workflows/orbit.yml`, remplace l'étape
+   « Tout vérifier » en commentaire par l'installation de la stack et la
+   commande « Tout vérifier » de la section 2. Si les commandes sont encore
+   « À définir », laisse l'étape en commentaire et signale-le.
+7. **Propose la protection de la branche principale** : PR obligatoire, check
+   `checks` requis, `push --force` interdit. Ne l'active toi-même que si
+   l'humain le demande. N'exige pas de relecture approuvée si les agents
+   utilisent le compte GitHub de l'humain : il ne pourrait plus fusionner
+   leurs PR.
+8. **Signale les écarts avec l'existant.** Si le projet a déjà ses propres
    conventions (format de commit, nommage des branches, outils de test),
    présente-les à l'humain plutôt que de choisir entre elles et celles
    d'orbit-agent.
-7. **Fais lire `AGENTS.md` à ton outil.** S'il ne le lit pas de lui-même, crée
+9. **Fais lire `AGENTS.md` à ton outil.** S'il ne le lit pas de lui-même, crée
    le fichier qu'il attend, en le faisant pointer vers `AGENTS.md` plutôt
    qu'en recopiant son contenu.
-8. **Ne commite pas sur la branche principale.** Termine par un résumé : les
+10. **Ne commite pas sur la branche principale.** Termine par un résumé : les
    fichiers ajoutés, les conflits trouvés, les points « À confirmer » et les
    questions en attente. L'humain relit, puis décide de la suite.
-9. **Supprime le clone temporaire.**
+11. **Supprime le clone temporaire.**

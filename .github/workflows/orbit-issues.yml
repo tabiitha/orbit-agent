@@ -13,7 +13,7 @@ jobs:
   needs-validation:
     runs-on: ubuntu-latest
     steps:
-      - name: Pose le label needs-validation
+      - name: Add the needs-validation label
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}

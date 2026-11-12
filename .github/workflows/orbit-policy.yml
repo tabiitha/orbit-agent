@@ -21,7 +21,7 @@ jobs:
       PR: ${{ github.event.pull_request.number }}
       CC_PATTERN: '^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9-]+\))?!?: .+'
     steps:
-      - name: La PR est liée à une issue validée
+      - name: PR is linked to a validated issue
         env:
           BODY: ${{ github.event.pull_request.body }}
           AUTHOR: ${{ github.event.pull_request.user.login }}
@@ -52,7 +52,7 @@ jobs:
           done
           exit $fail
 
-      - name: Le titre de la PR suit Conventional Commits
+      - name: PR title follows Conventional Commits
         env:
           TITLE: ${{ github.event.pull_request.title }}
         run: |
@@ -61,7 +61,7 @@ jobs:
             exit 1
           fi
 
-      - name: Les commits suivent Conventional Commits
+      - name: Commits follow Conventional Commits
         run: |
           subjects=$(gh api --paginate "repos/$GH_REPO/pulls/$PR/commits" \
             --jq '.[] | select(.parents | length == 1) | .commit.message | split("\n")[0]')
@@ -74,7 +74,7 @@ jobs:
           done <<< "$subjects"
           exit $fail
 
-      - name: Les règles et la CI ne changent qu'avec le label rules-change
+      - name: Rules and CI only change with the rules-change label
         env:
           RULES_CHANGE: ${{ contains(github.event.pull_request.labels.*.name, 'rules-change') }}
         run: |

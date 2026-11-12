@@ -15,7 +15,8 @@ Il ne dépend d'aucun langage ni d'aucun outil. Ce sont des fichiers Markdown,
 - **`docs/`** contient le détail, lu seulement quand il sert : `AGENTS.md`
   indique quel fichier lire et à quel moment.
 - **Tout changement part d'une issue** petite et validée, et aboutit à une PR
-  liée à cette issue.
+  liée à cette issue. Une issue naît avec le label `needs-validation`, et la
+  CI refuse la PR tant que le valideur ne l'a pas retiré.
 
 ## Contenu
 
@@ -48,7 +49,8 @@ Les règles critiques ne reposent pas seulement sur la bonne volonté de
 l'agent : deux checks les vérifient sur chaque PR.
 
 - **`policy`** (`.github/workflows/orbit-policy.yml`) :
-  - la description contient `Closes #N` ;
+  - la description contient `Closes #N`, et l'issue est ouverte et validée
+    (ni `needs-validation` ni `blocked`) ;
   - le titre et les commits suivent Conventional Commits ;
   - une PR qui touche `AGENTS.md`, `docs/rules/` ou `.github/` porte le label
     `rules-change`, posé par l'humain.
@@ -73,6 +75,8 @@ ne peut pas être mergée.
 - `rules-change` est un signal, pas un verrou : un agent qui utilise le compte
   GitHub de l'humain peut le poser. La règle d'or 9 le lui interdit, et la
   review de l'humain reste nécessaire.
+- Retirer un label de l'issue ne relance pas `policy` : relancer le job
+  depuis la PR.
 
 ## Installation
 

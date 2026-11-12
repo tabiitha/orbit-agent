@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  issues: read
   pull-requests: read
 
 jobs:
@@ -20,14 +21,28 @@ jobs:
       PR: ${{ github.event.pull_request.number }}
       CC_PATTERN: '^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9-]+\))?!?: .+'
     steps:
-      - name: La PR est liée à une issue
+      - name: La PR est liée à une issue validée
         env:
           BODY: ${{ github.event.pull_request.body }}
         run: |
-          if ! grep -qiE 'closes #[0-9]+' <<< "$BODY"; then
+          issues=$(grep -oiE 'closes #[0-9]+' <<< "$BODY" | grep -oE '[0-9]+' | sort -u || true)
+          if [ -z "$issues" ]; then
             echo "::error::La description de la PR doit contenir « Closes #N »."
             exit 1
           fi
+          fail=0
+          for n in $issues; do
+            verdict=$(gh api "repos/$GH_REPO/issues/$n" --jq '
+              if .pull_request or .state != "open" then "pas une issue ouverte"
+              elif any(.labels[].name; . == "needs-validation" or . == "blocked")
+              then "pas validée (needs-validation ou blocked)"
+              else "ok" end') || verdict="introuvable"
+            if [ "$verdict" != ok ]; then
+              echo "::error::#$n : $verdict."
+              fail=1
+            fi
+          done
+          exit $fail
 
       - name: Le titre de la PR suit Conventional Commits
         env:

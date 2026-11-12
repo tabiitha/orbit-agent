@@ -75,10 +75,12 @@ Adapte l'effort à la taille de la tâche :
 Dans tous les cas, suis ce cycle :
 
 0. **Partir d'une issue.** Tout changement commence par une issue. S'il n'y
-   en a pas, rédige-la à partir de `.github/ISSUE_TEMPLATE/issue.md`, puis fais-la
-   valider avant de commencer :
+   en a pas, rédige-la à partir de `.github/ISSUE_TEMPLATE/issue.md`, crée-la
+   avec le label `needs-validation`, puis fais-la valider avant de commencer :
    - par défaut, par l'humain ;
    - par un autre agent que toi, seulement si l'humain l'a demandé.
+
+   Seul le valideur retire le label : tant qu'il est là, la CI refuse la PR.
 
    L'issue fixe l'objectif, le périmètre et les acceptance criteria :
    c'est ta référence jusqu'à la fin.

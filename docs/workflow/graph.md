@@ -24,7 +24,9 @@ stateDiagram-v2
 
 ### Needs validation
 
-- **Sur GitHub** : issue ouverte, label `needs-validation`.
+- **Sur GitHub** : issue ouverte, label `needs-validation`, posé à la
+  création (voir `docs/workflow/issues.md`). Une issue rédigée par l'humain
+  passe directement à **Ready** : il retire le label.
 - **Qui agit** : l'humain par défaut, ou un autre agent que l'auteur si
   l'humain l'a demandé.
 - **Pour en sortir** : validée, le valideur retire le label → **Ready**. Si
@@ -32,7 +34,8 @@ stateDiagram-v2
 
 ### Ready
 
-- **Sur GitHub** : issue ouverte, sans label, sans personne assignée.
+- **Sur GitHub** : issue ouverte, sans label `needs-validation` ni `blocked`,
+  sans personne assignée.
 - **Qui agit** : l'humain confie l'issue à un agent. Un agent ne prend
   lui-même une issue `Ready` que si l'humain le lui a demandé.
 - **Pour en sortir** : l'agent s'assigne l'issue et crée la branche →
@@ -60,7 +63,8 @@ stateDiagram-v2
 
 ### In review
 
-- **Sur GitHub** : PR ouverte, liée par `Closes #N`.
+- **Sur GitHub** : PR ouverte, liée par `Closes #N`. La CI la refuse si
+  l'issue porte `needs-validation` ou `blocked`.
 - **Qui agit** : la review est faite par l'humain par défaut, ou par un
   autre agent que l'auteur de la PR si l'humain l'a demandé. L'auteur traite
   les retours.
@@ -77,7 +81,7 @@ stateDiagram-v2
 ## Règles
 
 - **Un agent ne valide jamais son propre travail** : ni l'issue qu'il a
-  écrite, ni la PR qu'il a ouverte.
+  écrite (il n'en retire pas `needs-validation`), ni la PR qu'il a ouverte.
 - **Une issue = un seul agent à la fois.**
 - **Plusieurs agents peuvent avancer en parallèle** sur des issues
   indépendantes, chacun avec sa branche et sa copie de travail.

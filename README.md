@@ -177,9 +177,9 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
    les différences à l'humain et propose une fusion.
 4. **Crée les labels** utilisés par le graphe et la CI :
    ```bash
-   gh label create needs-validation --description "Issue à valider avant de commencer"
-   gh label create blocked --description "En attente d'une réponse de l'humain"
-   gh label create rules-change --description "L'humain autorise cette PR à modifier les règles ou la CI"
+   gh label create needs-validation --description "Issue to validate before starting"
+   gh label create blocked --description "Waiting for an answer from the human"
+   gh label create rules-change --description "The human allows this PR to change the rules or the CI"
    ```
    Si le projet n'est pas sur GitHub ou si `gh` n'est pas disponible,
    signale-le à l'humain.

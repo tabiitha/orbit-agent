@@ -1,0 +1,52 @@
+name: orbit-policy
+
+# pull_request_target exécute la version de ce fichier présente sur la main
+# branch : une PR ne peut pas affaiblir ces vérifications. En contrepartie, ne
+# jamais y faire de checkout ni exécuter le code de la PR.
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  policy:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      PR: ${{ github.event.pull_request.number }}
+      CC_PATTERN: '^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9-]+\))?!?: .+'
+    steps:
+      - name: La PR est liée à une issue
+        env:
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          if ! grep -qiE 'closes #[0-9]+' <<< "$BODY"; then
+            echo "::error::La description de la PR doit contenir « Closes #N »."
+            exit 1
+          fi
+
+      - name: Le titre de la PR suit Conventional Commits
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          if ! grep -qE "$CC_PATTERN" <<< "$TITLE" || [ ${#TITLE} -gt 100 ]; then
+            echo "::error::Titre non conforme : $TITLE"
+            exit 1
+          fi
+
+      - name: Les commits suivent Conventional Commits
+        run: |
+          subjects=$(gh api --paginate "repos/$GH_REPO/pulls/$PR/commits" \
+            --jq '.[] | select(.parents | length == 1) | .commit.message | split("\n")[0]')
+          fail=0
+          while IFS= read -r msg; do
+            if ! grep -qE "$CC_PATTERN" <<< "$msg" || [ ${#msg} -gt 100 ]; then
+              echo "::error::Commit non conforme : $msg"
+              fail=1
+            fi
+          done <<< "$subjects"
+          exit $fail

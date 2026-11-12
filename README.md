@@ -25,7 +25,9 @@ CLAUDE.md                         pointe vers AGENTS.md, pour Claude Code
 .github/
 ├── ISSUE_TEMPLATE/issue.md       modèle d'issue
 ├── pull_request_template.md      modèle de PR
-└── workflows/orbit.yml           vérifications automatiques des PR
+└── workflows/
+    ├── orbit-policy.yml          vérifie les règles de la PR (check policy)
+    └── orbit.yml                 vérifie le code de la PR (check code)
 docs/
 ├── workflow/
 │   ├── issues.md                 rédiger, valider et découper une issue
@@ -43,15 +45,29 @@ docs/
 ## Vérifications automatiques
 
 Les règles critiques ne reposent pas seulement sur la bonne volonté de
-l'agent : `.github/workflows/orbit.yml` les vérifie sur chaque PR.
+l'agent : deux checks les vérifient sur chaque PR.
 
-- La description contient `Closes #N`.
-- Le titre et les commits suivent Conventional Commits.
-- Aucun secret n'est présent dans le code.
-- La commande `check` du projet passe (à compléter à l'installation).
+- **`policy`** (`.github/workflows/orbit-policy.yml`) :
+  - la description contient `Closes #N` ;
+  - le titre et les commits suivent Conventional Commits.
+- **`code`** (`.github/workflows/orbit.yml`) :
+  - aucun secret n'est présent dans les commits ;
+  - la commande `check` du projet passe (à compléter à l'installation).
 
-Avec la protection de la main branch, une PR qui ne passe pas ces
-vérifications ne peut pas être mergée.
+`policy` tourne sur `pull_request_target` : c'est la version de la main branch
+qui s'exécute, sans checkout du code de la PR. Une PR ne peut donc pas
+affaiblir ces vérifications. `code` a besoin du code de la PR : il tourne sur
+`pull_request`, dans la version présente dans la PR.
+
+Avec la protection de la main branch, une PR qui ne passe pas ces deux checks
+ne peut pas être mergée.
+
+**Limites**
+
+- `policy` ne prend effet qu'une fois `orbit-policy.yml` sur la main branch :
+  la PR qui l'ajoute n'est pas vérifiée par lui.
+- Une PR peut modifier `orbit.yml`, donc le check `code`. C'est pourquoi la
+  review de l'humain reste nécessaire.
 
 ## Installation
 
@@ -75,7 +91,8 @@ s'adapte et pose des questions pour ce qu'il ne peut pas déduire.
    suivant les consignes en commentaire.
 4. Compléter l'étape `check` de `.github/workflows/orbit.yml`.
 5. Protéger la main branch (*Settings → Rules → Rulesets*) : exiger
-   une PR, exiger que le check `checks` passe, interdire le `push --force`.
+   une PR, exiger que les checks `policy` et `code` passent, interdire le
+   `push --force`.
 6. Relire et commiter.
 
 `CLAUDE.md` contient seulement `@AGENTS.md`, pour que Claude Code lise les
@@ -122,9 +139,9 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
    `check` en commentaire par l'installation de la stack et la
    commande `check` de la section 2. Si les commandes sont encore
    `TBD`, laisse l'étape en commentaire et signale-le.
-7. **Propose la protection de la main branch** : PR obligatoire, check
-   `checks` requis, `push --force` interdit. Ne l'active toi-même que si
-   l'humain le demande. N'exige pas de review approuvée si les agents
+7. **Propose la protection de la main branch** : PR obligatoire, checks
+   `policy` et `code` requis, `push --force` interdit. Ne l'active toi-même
+   que si l'humain le demande. N'exige pas de review approuvée si les agents
    utilisent le compte GitHub de l'humain : il ne pourrait plus merger
    leurs PR.
 8. **Signale les écarts avec l'existant.** Si le projet a déjà ses propres

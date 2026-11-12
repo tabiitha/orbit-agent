@@ -56,7 +56,7 @@ jobs:
         env:
           TITLE: ${{ github.event.pull_request.title }}
         run: |
-          if ! grep -qE "$CC_PATTERN" <<< "$TITLE" || [ ${#TITLE} -gt 100 ]; then
+          if ! [[ $TITLE =~ $CC_PATTERN ]] || [ ${#TITLE} -gt 100 ]; then
             echo "::error::Titre non conforme : $TITLE"
             exit 1
           fi
@@ -67,7 +67,7 @@ jobs:
             --jq '.[] | select(.parents | length == 1) | .commit.message | split("\n")[0]')
           fail=0
           while IFS= read -r msg; do
-            if ! grep -qE "$CC_PATTERN" <<< "$msg" || [ ${#msg} -gt 100 ]; then
+            if ! [[ $msg =~ $CC_PATTERN ]] || [ ${#msg} -gt 100 ]; then
               echo "::error::Commit non conforme : $msg"
               fail=1
             fi

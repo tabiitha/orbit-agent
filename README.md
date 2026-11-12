@@ -23,6 +23,7 @@ Il ne dépend d'aucun langage ni d'aucun outil. Ce sont des fichiers Markdown,
 ```
 AGENTS.md                         les règles lues à chaque session
 CLAUDE.md                         pointe vers AGENTS.md, pour Claude Code
+.orbit-version                    la version d'orbit-agent installée
 .github/
 ├── ISSUE_TEMPLATE/issue.md       modèle d'issue
 ├── pull_request_template.md      modèle de PR
@@ -97,8 +98,8 @@ s'adapte et pose des questions pour ce qu'il ne peut pas déduire.
 
 ### À la main
 
-1. Copier `AGENTS.md`, `CLAUDE.md`, `docs/` et `.github/` à la racine du projet, sans
-   écraser les fichiers existants.
+1. Copier `AGENTS.md`, `CLAUDE.md`, `.orbit-version`, `docs/` et `.github/` à
+   la racine du projet, sans écraser les fichiers existants.
 2. Créer les labels `needs-validation`, `blocked` et `rules-change` sur le
    dépôt GitHub.
 3. Remplir la section 2 d'`AGENTS.md` et `docs/context/architecture.md`, en
@@ -123,6 +124,35 @@ même façon le fichier qu'il attend.
 - **Garder `AGENTS.md` court.** Une règle qui ne sert pas à chaque tâche va
   dans `docs/`, avec une ligne dans le tableau « Où trouver quoi ».
 
+## Mettre à jour
+
+`.orbit-version` donne la version d'orbit-agent installée dans le projet, et
+`CHANGELOG.md` ce qui change à chaque version.
+
+Avec un agent, donner ce prompt :
+
+> Mets à jour le harness orbit-agent de ce projet. Clone
+> `https://github.com/tabiitha/orbit-agent.git` dans un dossier temporaire, lis
+> la section « Mettre à jour » de son `README.md` et suis-la.
+
+Les étapes, à la main comme par un agent :
+
+1. **Comparer les versions.** Lire dans le `CHANGELOG.md` du clone les
+   versions plus récentes que le `.orbit-version` du projet. S'il n'y en a
+   pas, il n'y a rien à faire. Sans `.orbit-version`, l'installation est
+   antérieure à 0.1.0.
+2. **Travailler sur une branche** `chore/update-orbit-agent`.
+3. **Reporter les changements** d'`AGENTS.md`, `docs/workflow/`,
+   `docs/rules/` et `.github/`. Le détail se lit dans le clone avec
+   `git diff v<version installée> HEAD`. Garder ce que le projet a adapté :
+   la section 2 d'`AGENTS.md`, l'étape `check` d'`orbit.yml`, les règles
+   ajoutées par l'humain. Un agent montre chaque fusion à l'humain.
+4. **Ne pas toucher à `docs/context/`** : il appartient au projet.
+5. **Faire ce que le changelog demande** (labels, checks requis), puis copier
+   `.orbit-version`.
+6. **Ouvrir la PR.** Elle touche les règles : l'humain la relit et pose le
+   label `rules-change`.
+
 ## Pour les agents
 
 Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
@@ -133,8 +163,9 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
    `.github/pull_request_template.md`.
 2. **Travaille sur une branche** `chore/install-orbit-agent`. Si le projet
    n'est pas encore un dépôt git, demande à l'humain avant de lancer `git init`.
-3. **Copie `AGENTS.md`, `CLAUDE.md`, `docs/` et `.github/`** depuis le clone.
-   Ne copie ni ce `README.md` ni `LICENSE`. N'écrase aucun fichier existant :
+3. **Copie `AGENTS.md`, `CLAUDE.md`, `.orbit-version`, `docs/` et `.github/`**
+   depuis le clone. Ne copie ni ce `README.md`, ni `LICENSE`, ni
+   `CHANGELOG.md`. N'écrase aucun fichier existant :
    en cas de conflit, montre les différences à l'humain et propose une fusion.
 4. **Crée les labels** utilisés par le graphe et la CI :
    ```bash

@@ -57,7 +57,9 @@ l'agent : deux checks les vérifient sur chaque PR.
   - une PR qui touche `AGENTS.md`, `docs/rules/` ou `.github/` porte le label
     `rules-change`, posé par l'humain.
 - **`code`** (`.github/workflows/orbit.yml`) :
-  - aucun secret n'est présent dans les commits ;
+  - aucun secret n'est présent dans les commits (gitleaks, appelé
+    directement : l'action `gitleaks/gitleaks-action` exige une licence
+    `GITLEAKS_LICENSE` pour les dépôts d'organisation) ;
   - la commande `check` du projet passe (à compléter à l'installation).
 
 `policy` tourne sur `pull_request_target` : c'est la version de la main branch

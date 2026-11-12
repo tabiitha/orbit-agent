@@ -17,10 +17,22 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Le binaire plutôt que gitleaks-action : pas de licence exigée pour les
+      # organisations, pas de token ni de permission en écriture.
       - name: Aucun secret dans le code
-        uses: gitleaks/gitleaks-action@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: 8.30.1
+          SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          cd "$RUNNER_TEMP"
+          curl -sSfL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v$VERSION/gitleaks_${VERSION}_linux_x64.tar.gz"
+          echo "$SHA256  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz gitleaks
+          ./gitleaks git --no-banner --redact --verbose \
+            --log-opts="--no-merges $BASE..$HEAD" "$GITHUB_WORKSPACE"
 
       # À remplir à l'installation : la commande `check` de la
       # section 2 d'AGENTS.md, précédée de l'installation de la stack.

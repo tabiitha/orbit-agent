@@ -16,9 +16,12 @@ Pour rédiger une issue, pars du modèle `.github/ISSUE_TEMPLATE/issue.md`.
   lignes. Pas de contexte qu'on trouve déjà dans le code ou dans `AGENTS.md`.
 - **Vérifiable.** Les acceptance criteria sont obligatoires : chacun doit
   pouvoir être constaté ou testé.
+- **Titre en anglais.** Le contenu de l'issue reste en français.
 
 Exemple d'issue suffisante :
 
+> **Titre** : Reject overlapping bookings
+>
 > **Objectif** : Refuser une réservation qui chevauche un créneau déjà pris.
 >
 > **Acceptance criteria**

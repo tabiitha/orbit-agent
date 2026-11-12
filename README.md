@@ -15,17 +15,22 @@ Il ne dépend d'aucun langage ni d'aucun outil. Ce sont des fichiers Markdown,
 - **`docs/`** contient le détail, lu seulement quand il sert : `AGENTS.md`
   indique quel fichier lire et à quel moment.
 - **Tout changement part d'une issue** petite et validée, et aboutit à une PR
-  liée à cette issue.
+  liée à cette issue. Une issue naît avec le label `needs-validation`, et la
+  CI refuse la PR tant que le valideur ne l'a pas retiré.
 
 ## Contenu
 
 ```
 AGENTS.md                         les règles lues à chaque session
 CLAUDE.md                         pointe vers AGENTS.md, pour Claude Code
+.orbit-version                    la version d'orbit-agent installée
 .github/
 ├── ISSUE_TEMPLATE/issue.md       modèle d'issue
 ├── pull_request_template.md      modèle de PR
-└── workflows/orbit.yml           vérifications automatiques des PR
+└── workflows/
+    ├── orbit-issues.yml          pose needs-validation sur toute nouvelle issue
+    ├── orbit-policy.yml          vérifie les règles de la PR (check policy)
+    └── orbit.yml                 vérifie le code de la PR (check code)
 docs/
 ├── workflow/
 │   ├── issues.md                 rédiger, valider et découper une issue
@@ -43,15 +48,48 @@ docs/
 ## Vérifications automatiques
 
 Les règles critiques ne reposent pas seulement sur la bonne volonté de
-l'agent : `.github/workflows/orbit.yml` les vérifie sur chaque PR.
+l'agent : deux checks les vérifient sur chaque PR.
 
-- La description contient `Closes #N`.
-- Le titre et les commits suivent Conventional Commits.
-- Aucun secret n'est présent dans le code.
-- La commande `check` du projet passe (à compléter à l'installation).
+- **`policy`** (`.github/workflows/orbit-policy.yml`) :
+  - la description contient `Closes #N`, et l'issue est ouverte et validée
+    (ni `needs-validation` ni `blocked`). Les PR de Dependabot et Renovate en
+    sont dispensées (liste `EXEMPT_BOTS`), pas des vérifications suivantes :
+    pour Dependabot, régler `commit-message.prefix` (par exemple `build`) ;
+  - le titre et les commits suivent Conventional Commits ;
+  - une PR qui touche `AGENTS.md`, `docs/rules/` ou `.github/` porte le label
+    `rules-change`, posé par l'humain.
+- **`code`** (`.github/workflows/orbit.yml`) :
+  - aucun secret n'est présent dans les commits (gitleaks, appelé
+    directement : l'action `gitleaks/gitleaks-action` exige une licence
+    `GITLEAKS_LICENSE` pour les dépôts d'organisation) ;
+  - la commande `check` du projet passe (à compléter à l'installation).
 
-Avec la protection de la main branch, une PR qui ne passe pas ces
-vérifications ne peut pas être mergée.
+`policy` tourne sur `pull_request_target` : c'est la version de la main branch
+qui s'exécute, sans checkout du code de la PR. Une PR ne peut donc pas
+affaiblir ces vérifications. `code` a besoin du code de la PR : il tourne sur
+`pull_request`, dans la version présente dans la PR.
+
+Avec la protection de la main branch, une PR qui ne passe pas ces deux checks
+ne peut pas être mergée.
+
+`.github/workflows/orbit-issues.yml` pose le label `needs-validation` sur
+toute nouvelle issue, qu'elle soit créée depuis le site, avec `gh` ou par
+l'API. Un agent qui oublie le label ne produit donc pas une issue qui a l'air
+validée. L'humain retire aussi le label de ses propres issues.
+
+**Limites**
+
+- `policy` et `orbit-issues.yml` ne prennent effet qu'une fois sur la main
+  branch : la PR qui les ajoute n'est pas vérifiée par `policy`.
+- Si GitHub Actions est désactivé ou en panne, le label `needs-validation`
+  n'est pas posé sur les nouvelles issues.
+- Une PR peut modifier `orbit.yml`, donc le check `code`. C'est pourquoi
+  `.github/` est protégé comme les règles (label `rules-change`).
+- `rules-change` est un signal, pas un verrou : un agent qui utilise le compte
+  GitHub de l'humain peut le poser. La règle d'or 9 le lui interdit, et la
+  review de l'humain reste nécessaire.
+- Retirer un label de l'issue ne relance pas `policy` : relancer le job
+  depuis la PR.
 
 ## Installation
 
@@ -68,14 +106,16 @@ s'adapte et pose des questions pour ce qu'il ne peut pas déduire.
 
 ### À la main
 
-1. Copier `AGENTS.md`, `CLAUDE.md`, `docs/` et `.github/` à la racine du projet, sans
-   écraser les fichiers existants.
-2. Créer les labels `needs-validation` et `blocked` sur le dépôt GitHub.
+1. Copier `AGENTS.md`, `CLAUDE.md`, `.orbit-version`, `docs/` et `.github/` à
+   la racine du projet, sans écraser les fichiers existants.
+2. Créer les labels `needs-validation`, `blocked` et `rules-change` sur le
+   dépôt GitHub.
 3. Remplir la section 2 d'`AGENTS.md` et `docs/context/architecture.md`, en
    suivant les consignes en commentaire.
 4. Compléter l'étape `check` de `.github/workflows/orbit.yml`.
 5. Protéger la main branch (*Settings → Rules → Rulesets*) : exiger
-   une PR, exiger que le check `checks` passe, interdire le `push --force`.
+   une PR, exiger que les checks `policy` et `code` passent, interdire le
+   `push --force`.
 6. Relire et commiter.
 
 `CLAUDE.md` contient seulement `@AGENTS.md`, pour que Claude Code lise les
@@ -84,11 +124,42 @@ même façon le fichier qu'il attend.
 
 ## Adapter à un projet
 
-- **`AGENTS.md` et `docs/rules/`** sont les règles : seul l'humain les modifie.
+- **`AGENTS.md`, `docs/rules/` et `.github/`** sont les règles et leurs
+  garde-fous : seul l'humain les modifie, et seul lui pose le label
+  `rules-change` qui autorise une PR à les toucher.
 - **La section 2 d'`AGENTS.md` et `docs/context/`** décrivent le projet :
   l'agent les tient à jour au fil des changements.
 - **Garder `AGENTS.md` court.** Une règle qui ne sert pas à chaque tâche va
   dans `docs/`, avec une ligne dans le tableau « Où trouver quoi ».
+
+## Mettre à jour
+
+`.orbit-version` donne la version d'orbit-agent installée dans le projet, et
+`CHANGELOG.md` ce qui change à chaque version.
+
+Avec un agent, donner ce prompt :
+
+> Mets à jour le harness orbit-agent de ce projet. Clone
+> `https://github.com/tabiitha/orbit-agent.git` dans un dossier temporaire, lis
+> la section « Mettre à jour » de son `README.md` et suis-la.
+
+Les étapes, à la main comme par un agent :
+
+1. **Comparer les versions.** Lire dans le `CHANGELOG.md` du clone les
+   versions plus récentes que le `.orbit-version` du projet. S'il n'y en a
+   pas, il n'y a rien à faire. Sans `.orbit-version`, l'installation est
+   antérieure à 0.1.0.
+2. **Travailler sur une branche** `chore/update-orbit-agent`.
+3. **Reporter les changements** d'`AGENTS.md`, `docs/workflow/`,
+   `docs/rules/` et `.github/`. Le détail se lit dans le clone avec
+   `git diff v<version installée> HEAD`. Garder ce que le projet a adapté :
+   la section 2 d'`AGENTS.md`, l'étape `check` d'`orbit.yml`, les règles
+   ajoutées par l'humain. Un agent montre chaque fusion à l'humain.
+4. **Ne pas toucher à `docs/context/`** : il appartient au projet.
+5. **Faire ce que le changelog demande** (labels, checks requis), puis copier
+   `.orbit-version`.
+6. **Ouvrir la PR.** Elle touche les règles : l'humain la relit et pose le
+   label `rules-change`.
 
 ## Pour les agents
 
@@ -100,13 +171,15 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
    `.github/pull_request_template.md`.
 2. **Travaille sur une branche** `chore/install-orbit-agent`. Si le projet
    n'est pas encore un dépôt git, demande à l'humain avant de lancer `git init`.
-3. **Copie `AGENTS.md`, `CLAUDE.md`, `docs/` et `.github/`** depuis le clone. Ne copie pas
-   ce `README.md`. N'écrase aucun fichier existant : en cas de conflit, montre
+3. **Copie `AGENTS.md`, `CLAUDE.md`, `.orbit-version`, `docs/` et `.github/`**
+   depuis le clone. Ne copie ni ce `README.md`, ni `LICENSE`, ni
+   `CHANGELOG.md`. N'écrase aucun fichier existant : en cas de conflit, montre
    les différences à l'humain et propose une fusion.
-4. **Crée les labels** utilisés par le graphe :
+4. **Crée les labels** utilisés par le graphe et la CI :
    ```bash
-   gh label create needs-validation --description "Issue à valider avant de commencer"
-   gh label create blocked --description "En attente d'une réponse de l'humain"
+   gh label create needs-validation --description "Issue to validate before starting"
+   gh label create blocked --description "Waiting for an answer from the human"
+   gh label create rules-change --description "The human allows this PR to change the rules or the CI"
    ```
    Si le projet n'est pas sur GitHub ou si `gh` n'est pas disponible,
    signale-le à l'humain.
@@ -122,9 +195,9 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
    `check` en commentaire par l'installation de la stack et la
    commande `check` de la section 2. Si les commandes sont encore
    `TBD`, laisse l'étape en commentaire et signale-le.
-7. **Propose la protection de la main branch** : PR obligatoire, check
-   `checks` requis, `push --force` interdit. Ne l'active toi-même que si
-   l'humain le demande. N'exige pas de review approuvée si les agents
+7. **Propose la protection de la main branch** : PR obligatoire, checks
+   `policy` et `code` requis, `push --force` interdit. Ne l'active toi-même
+   que si l'humain le demande. N'exige pas de review approuvée si les agents
    utilisent le compte GitHub de l'humain : il ne pourrait plus merger
    leurs PR.
 8. **Signale les écarts avec l'existant.** Si le projet a déjà ses propres
@@ -138,3 +211,7 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
    fichiers ajoutés, les conflits trouvés, les points `TBC` et les
    questions en attente. L'humain relit, puis décide de la suite.
 11. **Supprime le clone temporaire.**
+
+## Licence
+
+MIT, voir [`LICENSE`](LICENSE).

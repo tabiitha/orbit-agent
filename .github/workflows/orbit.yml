@@ -1,58 +1,39 @@
 name: orbit
 
+# pull_request exécute la version de ce fichier présente dans la PR : seules
+# les vérifications qui ont besoin de son code sont ici. Les autres sont dans
+# orbit-policy.yml.
 on:
   pull_request:
-    types: [opened, edited, synchronize, reopened]
 
 permissions:
   contents: read
 
 jobs:
-  checks:
+  code:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: La PR est liée à une issue
+      # Le binaire plutôt que gitleaks-action : pas de licence exigée pour les
+      # organisations, pas de token ni de permission en écriture.
+      - name: No secrets in the code
         env:
-          BODY: ${{ github.event.pull_request.body }}
-        run: |
-          if ! grep -qiE 'closes #[0-9]+' <<< "$BODY"; then
-            echo "::error::La description de la PR doit contenir « Closes #N »."
-            exit 1
-          fi
-
-      - name: Le titre de la PR suit Conventional Commits
-        env:
-          TITLE: ${{ github.event.pull_request.title }}
-        run: |
-          pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9-]+\))?!?: .+'
-          if ! grep -qE "$pattern" <<< "$TITLE" || [ ${#TITLE} -gt 100 ]; then
-            echo "::error::Titre non conforme : $TITLE"
-            exit 1
-          fi
-
-      - name: Les commits suivent Conventional Commits
-        env:
+          VERSION: 8.30.1
+          SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
           BASE: ${{ github.event.pull_request.base.sha }}
           HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
-          pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9-]+\))?!?: .+'
-          fail=0
-          while IFS= read -r msg; do
-            if ! grep -qE "$pattern" <<< "$msg" || [ ${#msg} -gt 100 ]; then
-              echo "::error::Commit non conforme : $msg"
-              fail=1
-            fi
-          done < <(git log --no-merges --format=%s "$BASE..$HEAD")
-          exit $fail
-
-      - name: Aucun secret dans le code
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          cd "$RUNNER_TEMP"
+          curl -sSfL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v$VERSION/gitleaks_${VERSION}_linux_x64.tar.gz"
+          echo "$SHA256  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz gitleaks
+          ./gitleaks git --no-banner --redact --verbose \
+            --log-opts="--no-merges $BASE..$HEAD" "$GITHUB_WORKSPACE"
 
       # À remplir à l'installation : la commande `check` de la
       # section 2 d'AGENTS.md, précédée de l'installation de la stack.

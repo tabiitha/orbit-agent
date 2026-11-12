@@ -2,7 +2,7 @@
 name: Task
 about: Une issue = une petite tâche, un seul résultat vérifiable
 title: ""
-labels: []
+labels: [needs-validation]
 ---
 
 ## Objectif

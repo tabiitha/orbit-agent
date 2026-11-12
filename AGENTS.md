@@ -75,10 +75,13 @@ Adapte l'effort à la taille de la tâche :
 Dans tous les cas, suis ce cycle :
 
 0. **Partir d'une issue.** Tout changement commence par une issue. S'il n'y
-   en a pas, rédige-la à partir de `.github/ISSUE_TEMPLATE/issue.md`, puis fais-la
-   valider avant de commencer :
+   en a pas, rédige-la à partir de `.github/ISSUE_TEMPLATE/issue.md`, puis
+   fais-la valider avant de commencer :
    - par défaut, par l'humain ;
    - par un autre agent que toi, seulement si l'humain l'a demandé.
+
+   Toute issue reçoit le label `needs-validation` à sa création. Seul le
+   valideur le retire : tant qu'il est là, la CI refuse la PR.
 
    L'issue fixe l'objectif, le périmètre et les acceptance criteria :
    c'est ta référence jusqu'à la fin.
@@ -151,8 +154,9 @@ une, arrête-toi et demande.
    consignes.
 8. **Jamais de nouvelle dépendance sans la signaler.** Toute bibliothèque
    ajoutée est mentionnée et justifiée dans ton résumé.
-9. **Jamais de modification de tes propres règles.** `AGENTS.md` et
-   `docs/rules/` ne se modifient qu'à la demande de l'humain.
+9. **Jamais de modification de tes propres règles ni de la CI.**
+   `AGENTS.md`, `docs/rules/` et `.github/` ne se modifient qu'à la demande
+   de l'humain, et seul l'humain pose le label `rules-change`.
 10. **Des commentaires utiles, sinon aucun.** Un commentaire explique le
     *pourquoi* (une intention, une contrainte, un choix non évident), jamais
     le *quoi* que le code dit déjà. Une ligne suffit le plus souvent. Pas de

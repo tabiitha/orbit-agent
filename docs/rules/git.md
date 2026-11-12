@@ -62,8 +62,12 @@ Refs: #<issue>
 
 - **Une PR = une issue.** Pars du modèle `.github/pull_request_template.md`.
 - **Lie l'issue** avec `Closes #<numéro>` dans la description : elle se fermera
-  au merge.
+  au merge. Seules les PR de Dependabot et Renovate en sont dispensées. Pour
+  un correctif urgent, une issue de deux lignes suffit.
 - **Le titre suit le format de la première ligne des commits.**
+- **Une PR qui touche `AGENTS.md`, `docs/rules/` ou `.github/`** est refusée
+  par la CI tant que l'humain n'a pas posé le label `rules-change` (règle
+  d'or 9). Ne le pose jamais toi-même.
 - **Ouvre la PR quand la tâche est terminée** (section 4 d'`AGENTS.md`),
   pas avant.
 - **Réponds aux retours de review par de nouveaux commits**, sans réécrire

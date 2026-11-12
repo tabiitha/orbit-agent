@@ -37,13 +37,22 @@ Une tâche trop grosse pour une seule issue devient une **parent issue** :
 
 ## Faire valider une issue
 
+Toute issue reçoit le label `needs-validation` à sa création : le workflow
+`.github/workflows/orbit-issues.yml` le pose, quelle que soit la façon dont
+elle est créée.
+
 Une issue que tu as rédigée est validée avant que tu commences :
 
 - **par défaut, par l'humain** ;
 - **par un autre agent que toi**, seulement si l'humain l'a demandé.
 
-Une issue écrite par l'humain est déjà validée. Si elle te semble floue ou
-trop grosse, propose une reformulation ou un découpage avant de commencer.
+Le valideur retire le label, jamais l'auteur. La CI refuse une PR liée à une
+issue qui porte encore `needs-validation` ou `blocked`.
+
+Une issue écrite par l'humain est déjà validée : il retire lui-même le
+label. S'il l'a oublié, demande-lui de le retirer. Si
+l'issue te semble floue ou trop grosse, propose une reformulation ou un
+découpage avant de commencer.
 
 ## Travailler avec l'issue
 

@@ -50,7 +50,9 @@ l'agent : deux checks les vérifient sur chaque PR.
 
 - **`policy`** (`.github/workflows/orbit-policy.yml`) :
   - la description contient `Closes #N`, et l'issue est ouverte et validée
-    (ni `needs-validation` ni `blocked`) ;
+    (ni `needs-validation` ni `blocked`). Les PR de Dependabot et Renovate en
+    sont dispensées (liste `EXEMPT_BOTS`), pas des vérifications suivantes :
+    pour Dependabot, régler `commit-message.prefix` (par exemple `build`) ;
   - le titre et les commits suivent Conventional Commits ;
   - une PR qui touche `AGENTS.md`, `docs/rules/` ou `.github/` porte le label
     `rules-change`, posé par l'humain.

@@ -24,7 +24,15 @@ jobs:
       - name: La PR est liée à une issue validée
         env:
           BODY: ${{ github.event.pull_request.body }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          # Les bots de dépendances n'écrivent pas d'issue. Liste explicite :
+          # un agent peut lui aussi ouvrir ses PR sous un compte [bot].
+          EXEMPT_BOTS: dependabot[bot] renovate[bot]
         run: |
+          if [[ " $EXEMPT_BOTS " == *" $AUTHOR "* ]]; then
+            echo "PR ouverte par $AUTHOR : pas d'issue exigée."
+            exit 0
+          fi
           issues=$(grep -oiE 'closes #[0-9]+' <<< "$BODY" | grep -oE '[0-9]+' | sort -u || true)
           if [ -z "$issues" ]; then
             echo "::error::La description de la PR doit contenir « Closes #N »."

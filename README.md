@@ -116,7 +116,10 @@ s'adapte et pose des questions pour ce qu'il ne peut pas déduire.
 5. Protéger la main branch (*Settings → Rules → Rulesets*) : exiger
    une PR, exiger que les checks `policy` et `code` passent, interdire le
    `push --force`.
-6. Relire et commiter.
+6. Activer la suppression automatique des branches mergées (*Settings →
+   General → Automatically delete head branches*) : une branche = une issue,
+   elle n'a plus de raison d'exister après le merge.
+7. Relire et commiter.
 
 `CLAUDE.md` contient seulement `@AGENTS.md`, pour que Claude Code lise les
 mêmes règles. Si un autre outil ne lit pas `AGENTS.md` de lui-même, créer de la
@@ -199,7 +202,8 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
    `policy` et `code` requis, `push --force` interdit. Ne l'active toi-même
    que si l'humain le demande. N'exige pas de review approuvée si les agents
    utilisent le compte GitHub de l'humain : il ne pourrait plus merger
-   leurs PR.
+   leurs PR. Propose aussi la suppression automatique des branches mergées
+   (`gh repo edit --delete-branch-on-merge`).
 8. **Signale les écarts avec l'existant.** Si le projet a déjà ses propres
    conventions (format de commit, nommage des branches, outils de test),
    présente-les à l'humain plutôt que de choisir entre elles et celles

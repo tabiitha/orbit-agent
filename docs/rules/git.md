@@ -3,8 +3,8 @@
 ## Branches
 
 - **Une branche = une issue.** Crée-la depuis la main branch à jour.
-- **Nom** : `<type>/<numéro>-<description-courte>`.
-  > Exemple : `fix/12-chevauchement-creneaux`
+- **Nom** : `<type>/<numéro>-<description-courte>`, en anglais.
+  > Exemple : `fix/12-overlapping-bookings`
 - **Pour la mettre à jour**, merge la main branch dedans. Ne la
   rebase que si elle n'a jamais été poussée (règle d'or 3).
 
@@ -37,7 +37,8 @@ Refs: #<issue>
 - **La portée** est facultative : c'est la partie du code touchée, entre
   parenthèses (`api`, `auth`, `ui`…). Utilise les portées déjà présentes dans
   l'historique du projet.
-- **La première ligne** vise 72 caractères, sans dépasser 100.
+- **La première ligne** est en anglais. Elle vise 72 caractères, sans
+  dépasser 100. Le corps du commit reste en français.
 - **L'issue est référencée en pied** avec `Refs: #<numéro>`, pas dans la
   première ligne.
 - **Des commits petits et cohérents** : un commit fait une seule chose.
@@ -46,12 +47,12 @@ Refs: #<issue>
 
 > Exemples :
 > ```
-> fix(api): refuse les réservations qui se chevauchent
+> fix(api): reject overlapping bookings
 >
 > Refs: #12
 > ```
 > ```
-> feat(export): ajoute l'export des réservations en CSV
+> feat(export): add CSV export of bookings
 >
 > Les clubs doivent transmettre ce fichier à leur fédération chaque mois.
 >
@@ -64,7 +65,8 @@ Refs: #<issue>
 - **Lie l'issue** avec `Closes #<numéro>` dans la description : elle se fermera
   au merge. Seules les PR de Dependabot et Renovate en sont dispensées. Pour
   un correctif urgent, une issue de deux lignes suffit.
-- **Le titre suit le format de la première ligne des commits.**
+- **Le titre suit le format de la première ligne des commits**, en anglais
+  lui aussi. La description reste en français.
 - **Une PR qui touche `AGENTS.md`, `docs/rules/` ou `.github/`** est refusée
   par la CI tant que l'humain n'a pas posé le label `rules-change` (règle
   d'or 9). Ne le pose jamais toi-même.

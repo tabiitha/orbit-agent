@@ -6,6 +6,11 @@ Chaque version dit ce qu'il faut faire dans un projet déjà installé.
 Pour publier une version : mettre à jour `.orbit-version` et ce fichier dans
 la PR, puis créer le tag `vX.Y.Z` après le merge.
 
+## Non publié
+
+- La première ligne des commits, les noms de branches et les titres de PR et
+  d'issues sont en anglais. Leur contenu reste en français.
+
 ## 0.1.0 — 2026-11-12
 
 Première version numérotée.

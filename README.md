@@ -165,8 +165,8 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
    n'est pas encore un dépôt git, demande à l'humain avant de lancer `git init`.
 3. **Copie `AGENTS.md`, `CLAUDE.md`, `.orbit-version`, `docs/` et `.github/`**
    depuis le clone. Ne copie ni ce `README.md`, ni `LICENSE`, ni
-   `CHANGELOG.md`. N'écrase aucun fichier existant :
-   en cas de conflit, montre les différences à l'humain et propose une fusion.
+   `CHANGELOG.md`. N'écrase aucun fichier existant : en cas de conflit, montre
+   les différences à l'humain et propose une fusion.
 4. **Crée les labels** utilisés par le graphe et la CI :
    ```bash
    gh label create needs-validation --description "Issue à valider avant de commencer"

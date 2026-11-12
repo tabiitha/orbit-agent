@@ -28,6 +28,7 @@ CLAUDE.md                         pointe vers AGENTS.md, pour Claude Code
 ├── ISSUE_TEMPLATE/issue.md       modèle d'issue
 ├── pull_request_template.md      modèle de PR
 └── workflows/
+    ├── orbit-issues.yml          pose needs-validation sur toute nouvelle issue
     ├── orbit-policy.yml          vérifie les règles de la PR (check policy)
     └── orbit.yml                 vérifie le code de la PR (check code)
 docs/
@@ -71,10 +72,17 @@ affaiblir ces vérifications. `code` a besoin du code de la PR : il tourne sur
 Avec la protection de la main branch, une PR qui ne passe pas ces deux checks
 ne peut pas être mergée.
 
+`.github/workflows/orbit-issues.yml` pose le label `needs-validation` sur
+toute nouvelle issue, qu'elle soit créée depuis le site, avec `gh` ou par
+l'API. Un agent qui oublie le label ne produit donc pas une issue qui a l'air
+validée. L'humain retire aussi le label de ses propres issues.
+
 **Limites**
 
-- `policy` ne prend effet qu'une fois `orbit-policy.yml` sur la main branch :
-  la PR qui l'ajoute n'est pas vérifiée par lui.
+- `policy` et `orbit-issues.yml` ne prennent effet qu'une fois sur la main
+  branch : la PR qui les ajoute n'est pas vérifiée par `policy`.
+- Si GitHub Actions est désactivé ou en panne, le label `needs-validation`
+  n'est pas posé sur les nouvelles issues.
 - Une PR peut modifier `orbit.yml`, donc le check `code`. C'est pourquoi
   `.github/` est protégé comme les règles (label `rules-change`).
 - `rules-change` est un signal, pas un verrou : un agent qui utilise le compte

@@ -37,15 +37,11 @@ Une tâche trop grosse pour une seule issue devient une **parent issue** :
 
 ## Faire valider une issue
 
-Une issue que tu as rédigée porte le label `needs-validation` dès sa
-création. Le modèle le pose, mais `gh issue create` n'applique pas les labels
-du modèle : pose-le toi-même.
+Toute issue reçoit le label `needs-validation` à sa création : le workflow
+`.github/workflows/orbit-issues.yml` le pose, quelle que soit la façon dont
+elle est créée.
 
-```bash
-gh issue create --label needs-validation --title "…" --body-file issue.md
-```
-
-Elle est validée avant que tu commences :
+Une issue que tu as rédigée est validée avant que tu commences :
 
 - **par défaut, par l'humain** ;
 - **par un autre agent que toi**, seulement si l'humain l'a demandé.
@@ -53,8 +49,8 @@ Elle est validée avant que tu commences :
 Le valideur retire le label, jamais l'auteur. La CI refuse une PR liée à une
 issue qui porte encore `needs-validation` ou `blocked`.
 
-Une issue écrite par l'humain est déjà validée : s'il part du modèle, il
-retire lui-même le label. S'il l'a oublié, demande-lui de le retirer. Si
+Une issue écrite par l'humain est déjà validée : il retire lui-même le
+label. S'il l'a oublié, demande-lui de le retirer. Si
 l'issue te semble floue ou trop grosse, propose une reformulation ou un
 découpage avant de commencer.
 

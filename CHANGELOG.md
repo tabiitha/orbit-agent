@@ -10,8 +10,9 @@ la PR, puis créer le tag `vX.Y.Z` après le merge.
 
 Première version numérotée.
 
-- Le modèle d'issue pose `needs-validation`, et la CI refuse une PR liée à
-  une issue introuvable, fermée, ou qui porte `needs-validation` ou `blocked`.
+- Toute nouvelle issue reçoit `needs-validation` (workflow
+  `orbit-issues.yml`), et la CI refuse une PR liée à une issue introuvable,
+  fermée, ou qui porte `needs-validation` ou `blocked`.
 - Les vérifications de la PR (issue, titre, commits) passent dans
   `orbit-policy.yml` (check `policy`), sur `pull_request_target`. `orbit.yml`
   ne garde que gitleaks et `check` (check `code`).

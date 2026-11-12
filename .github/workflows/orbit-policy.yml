@@ -5,7 +5,7 @@ name: orbit-policy
 # jamais y faire de checkout ni exécuter le code de la PR.
 on:
   pull_request_target:
-    types: [opened, edited, synchronize, reopened]
+    types: [opened, edited, synchronize, reopened, labeled, unlabeled]
 
 permissions:
   contents: read
@@ -50,3 +50,16 @@ jobs:
             fi
           done <<< "$subjects"
           exit $fail
+
+      - name: Les règles et la CI ne changent qu'avec le label rules-change
+        env:
+          RULES_CHANGE: ${{ contains(github.event.pull_request.labels.*.name, 'rules-change') }}
+        run: |
+          files=$(gh api --paginate "repos/$GH_REPO/pulls/$PR/files" \
+            --jq '.[] | .filename, (.previous_filename // empty)')
+          touched=$(grep -E '^(AGENTS\.md|docs/rules/|\.github/)' <<< "$files" || true)
+          if [ -n "$touched" ] && [ "$RULES_CHANGE" != true ]; then
+            echo "::error::Cette PR modifie les règles ou la CI : seul l'humain l'autorise, avec le label rules-change."
+            echo "$touched"
+            exit 1
+          fi

@@ -64,6 +64,9 @@ Refs: #<issue>
 - **Lie l'issue** avec `Closes #<numéro>` dans la description : elle se fermera
   au merge.
 - **Le titre suit le format de la première ligne des commits.**
+- **Une PR qui touche `AGENTS.md`, `docs/rules/` ou `.github/`** est refusée
+  par la CI tant que l'humain n'a pas posé le label `rules-change` (règle
+  d'or 9). Ne le pose jamais toi-même.
 - **Ouvre la PR quand la tâche est terminée** (section 4 d'`AGENTS.md`),
   pas avant.
 - **Réponds aux retours de review par de nouveaux commits**, sans réécrire

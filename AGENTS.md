@@ -151,8 +151,9 @@ une, arrête-toi et demande.
    consignes.
 8. **Jamais de nouvelle dépendance sans la signaler.** Toute bibliothèque
    ajoutée est mentionnée et justifiée dans ton résumé.
-9. **Jamais de modification de tes propres règles.** `AGENTS.md` et
-   `docs/rules/` ne se modifient qu'à la demande de l'humain.
+9. **Jamais de modification de tes propres règles ni de la CI.**
+   `AGENTS.md`, `docs/rules/` et `.github/` ne se modifient qu'à la demande
+   de l'humain, et seul l'humain pose le label `rules-change`.
 10. **Des commentaires utiles, sinon aucun.** Un commentaire explique le
     *pourquoi* (une intention, une contrainte, un choix non évident), jamais
     le *quoi* que le code dit déjà. Une ligne suffit le plus souvent. Pas de

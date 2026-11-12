@@ -49,7 +49,9 @@ l'agent : deux checks les vérifient sur chaque PR.
 
 - **`policy`** (`.github/workflows/orbit-policy.yml`) :
   - la description contient `Closes #N` ;
-  - le titre et les commits suivent Conventional Commits.
+  - le titre et les commits suivent Conventional Commits ;
+  - une PR qui touche `AGENTS.md`, `docs/rules/` ou `.github/` porte le label
+    `rules-change`, posé par l'humain.
 - **`code`** (`.github/workflows/orbit.yml`) :
   - aucun secret n'est présent dans les commits ;
   - la commande `check` du projet passe (à compléter à l'installation).
@@ -66,7 +68,10 @@ ne peut pas être mergée.
 
 - `policy` ne prend effet qu'une fois `orbit-policy.yml` sur la main branch :
   la PR qui l'ajoute n'est pas vérifiée par lui.
-- Une PR peut modifier `orbit.yml`, donc le check `code`. C'est pourquoi la
+- Une PR peut modifier `orbit.yml`, donc le check `code`. C'est pourquoi
+  `.github/` est protégé comme les règles (label `rules-change`).
+- `rules-change` est un signal, pas un verrou : un agent qui utilise le compte
+  GitHub de l'humain peut le poser. La règle d'or 9 le lui interdit, et la
   review de l'humain reste nécessaire.
 
 ## Installation
@@ -86,7 +91,8 @@ s'adapte et pose des questions pour ce qu'il ne peut pas déduire.
 
 1. Copier `AGENTS.md`, `CLAUDE.md`, `docs/` et `.github/` à la racine du projet, sans
    écraser les fichiers existants.
-2. Créer les labels `needs-validation` et `blocked` sur le dépôt GitHub.
+2. Créer les labels `needs-validation`, `blocked` et `rules-change` sur le
+   dépôt GitHub.
 3. Remplir la section 2 d'`AGENTS.md` et `docs/context/architecture.md`, en
    suivant les consignes en commentaire.
 4. Compléter l'étape `check` de `.github/workflows/orbit.yml`.
@@ -101,7 +107,9 @@ même façon le fichier qu'il attend.
 
 ## Adapter à un projet
 
-- **`AGENTS.md` et `docs/rules/`** sont les règles : seul l'humain les modifie.
+- **`AGENTS.md`, `docs/rules/` et `.github/`** sont les règles et leurs
+  garde-fous : seul l'humain les modifie, et seul lui pose le label
+  `rules-change` qui autorise une PR à les toucher.
 - **La section 2 d'`AGENTS.md` et `docs/context/`** décrivent le projet :
   l'agent les tient à jour au fil des changements.
 - **Garder `AGENTS.md` court.** Une règle qui ne sert pas à chaque tâche va
@@ -120,10 +128,11 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
 3. **Copie `AGENTS.md`, `CLAUDE.md`, `docs/` et `.github/`** depuis le clone. Ne copie pas
    ce `README.md`. N'écrase aucun fichier existant : en cas de conflit, montre
    les différences à l'humain et propose une fusion.
-4. **Crée les labels** utilisés par le graphe :
+4. **Crée les labels** utilisés par le graphe et la CI :
    ```bash
    gh label create needs-validation --description "Issue à valider avant de commencer"
    gh label create blocked --description "En attente d'une réponse de l'humain"
+   gh label create rules-change --description "L'humain autorise cette PR à modifier les règles ou la CI"
    ```
    Si le projet n'est pas sur GitHub ou si `gh` n'est pas disponible,
    signale-le à l'humain.

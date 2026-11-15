@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+mkdir "$tmp/bin" "$tmp/fixtures" "$tmp/work"
+cp scripts/fake-gh "$tmp/bin/gh"
+touch "$tmp/seen.accept" "$tmp/seen.refuse"
+
+failures=0
+job=
+workdir=$tmp/work
+base_env=()
+
+load_job() {
+  ruby -ryaml -rjson -e 'puts JSON.generate(YAML.load_file(ARGV[0]))' "$1" > "$tmp/workflow.json"
+  job=$2
+}
+
+fixture() {
+  mkdir -p "$(dirname "$tmp/fixtures/$1")"
+  cat > "$tmp/fixtures/$1.json"
+}
+
+expect() {
+  local expected=$1 step=$2 label=$3
+  shift 3
+  local script status=0
+  script=$(jq -r --arg job "$job" --arg name "$step" \
+    '.jobs[$job].steps[] | select(.name == $name) | .run' "$tmp/workflow.json")
+  if [ -z "$script" ]; then
+    echo "FAIL  no step named: $step"
+    failures=1
+    return
+  fi
+  (
+    cd "$workdir"
+    env PATH="$tmp/bin:$PATH" FIXTURES="$tmp/fixtures" ${base_env[@]+"${base_env[@]}"} "$@" \
+      bash -e -c "$script"
+  ) > "$tmp/output" 2>&1 || status=$?
+  echo "$step" >> "$tmp/seen.$expected"
+  if { [ "$expected" = accept ] && [ "$status" -eq 0 ]; } || { [ "$expected" = refuse ] && [ "$status" -eq 1 ]; }; then
+    echo "ok    $expected: $label"
+  else
+    echo "FAIL  $expected: $label (exit $status)"
+    sed 's/^/        /' "$tmp/output"
+    failures=1
+  fi
+}
+
+finish() {
+  local name=$1 step kind
+  shift
+  while IFS= read -r step; do
+    case " $* " in *" $step "*) continue ;; esac
+    for kind in accept refuse; do
+      if ! grep -qxF "$step" "$tmp/seen.$kind"; then
+        echo "FAIL  step without a test for $kind: $step"
+        failures=1
+      fi
+    done
+  done < <(jq -r --arg job "$job" '.jobs[$job].steps[] | select(.run) | .name' "$tmp/workflow.json")
+
+  if [ "$failures" -ne 0 ]; then
+    echo "$name: some tests failed."
+    exit 1
+  fi
+  echo "$name: all tests passed."
+}

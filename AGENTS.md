@@ -38,7 +38,8 @@ Si le projet existe déjà :
 Si le projet n'existe pas encore :
 - Demande à l'humain le but du projet, son public et la stack souhaitée.
 - Remplis avec ses réponses. Les commandes restent `TBD` jusqu'à
-  l'initialisation du projet ; mets-les à jour à ce moment-là.
+  l'initialisation du projet ; mets-les à jour à ce moment-là. Le check
+  `code` échoue tant qu'il reste un `TBD`.
 
 Dans les deux cas, reste court : le détail va dans docs/context/.
 -->

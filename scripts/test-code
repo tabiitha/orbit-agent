@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+. scripts/test-lib
+
+load_job .github/workflows/orbit.yml code
+
+agents() {
+  workdir=$tmp/work/$1
+  mkdir -p "$workdir"
+  cat > "$workdir/AGENTS.md"
+}
+
+agents filled << 'MD'
+# AGENTS.md
+
+## 1. Ta posture
+
+Un [lien](https://example.com) ne compte pas, ni un [crochet] hors de la section 2.
+
+## 2. Le projet
+
+**But** : Une API de réservation, décrite dans [le README](README.md).
+
+| Action | Commande |
+| --- | --- |
+| Check (lint, types, tests) | `npm run check` |
+
+**État** : En développement. TBC : l'hébergement.
+
+## 3. Comment tu travailles une tâche
+
+Les commandes restent `TBD` jusqu'à l'initialisation.
+MD
+
+agents placeholder << 'MD'
+## 2. Le projet
+
+**But** : [Une phrase : ce que fait le projet et pour qui.]
+
+## 3. Comment tu travailles une tâche
+MD
+
+agents tbd << 'MD'
+## 2. Le projet
+
+**But** : Une API de réservation.
+
+| Action | Commande |
+| --- | --- |
+| Check (lint, types, tests) | TBD |
+
+## 3. Comment tu travailles une tâche
+MD
+
+agents no-section << 'MD'
+## Le projet
+
+**But** : Une API de réservation.
+MD
+
+mkdir "$tmp/work/no-file"
+cp AGENTS.md "$tmp/work/template-AGENTS.md"
+agents template < "$tmp/work/template-AGENTS.md"
+
+step='Project section of AGENTS.md is filled'
+workdir=$tmp/work/filled
+expect accept "$step" 'filled section, with a link and TBC' GITHUB_REPOSITORY=owner/project
+workdir=$tmp/work/template
+expect accept "$step" 'orbit-agent keeps its placeholders' GITHUB_REPOSITORY=tabiitha/orbit-agent
+expect refuse "$step" 'untouched template in a project' GITHUB_REPOSITORY=owner/project
+workdir=$tmp/work/placeholder
+expect refuse "$step" 'bracket placeholder left' GITHUB_REPOSITORY=owner/project
+workdir=$tmp/work/tbd
+expect refuse "$step" 'command still TBD' GITHUB_REPOSITORY=owner/project
+workdir=$tmp/work/no-section
+expect refuse "$step" 'section 2 heading missing' GITHUB_REPOSITORY=owner/project
+workdir=$tmp/work/no-file
+expect refuse "$step" 'AGENTS.md missing' GITHUB_REPOSITORY=owner/project
+
+step='Check'
+workdir=$tmp/work/filled
+expect accept "$step" 'orbit-agent has its own check' GITHUB_REPOSITORY=tabiitha/orbit-agent
+expect refuse "$step" 'project without a check command' GITHUB_REPOSITORY=owner/project
+
+finish test-code 'No secrets in the code'

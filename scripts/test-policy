@@ -2,46 +2,10 @@
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
+. scripts/test-lib
 
-workflow=.github/workflows/orbit-policy.yml
-tmp=$(mktemp -d)
-trap 'rm -rf "$tmp"' EXIT
-
-mkdir "$tmp/bin" "$tmp/fixtures"
-cp scripts/fake-gh "$tmp/bin/gh"
-touch "$tmp/seen.accept" "$tmp/seen.refuse"
-
-ruby -ryaml -rjson -e 'puts JSON.generate(YAML.load_file(ARGV[0]))' "$workflow" > "$tmp/workflow.json"
-cc_pattern=$(jq -r '.jobs.policy.env.CC_PATTERN' "$tmp/workflow.json")
-
-failures=0
-
-fixture() {
-  mkdir -p "$(dirname "$tmp/fixtures/$1")"
-  cat > "$tmp/fixtures/$1.json"
-}
-
-expect() {
-  local expected=$1 step=$2 label=$3
-  shift 3
-  local script status=0
-  script=$(jq -r --arg name "$step" '.jobs.policy.steps[] | select(.name == $name) | .run' "$tmp/workflow.json")
-  if [ -z "$script" ]; then
-    echo "FAIL  no step named: $step"
-    failures=1
-    return
-  fi
-  env PATH="$tmp/bin:$PATH" FIXTURES="$tmp/fixtures" GH_REPO=owner/repo CC_PATTERN="$cc_pattern" "$@" \
-    bash -e -c "$script" > "$tmp/output" 2>&1 || status=$?
-  echo "$step" >> "$tmp/seen.$expected"
-  if { [ "$expected" = accept ] && [ "$status" -eq 0 ]; } || { [ "$expected" = refuse ] && [ "$status" -eq 1 ]; }; then
-    echo "ok    $expected: $label"
-  else
-    echo "FAIL  $expected: $label (exit $status)"
-    sed 's/^/        /' "$tmp/output"
-    failures=1
-  fi
-}
+load_job .github/workflows/orbit-policy.yml policy
+base_env=(GH_REPO=owner/repo "CC_PATTERN=$(jq -r '.jobs.policy.env.CC_PATTERN' "$tmp/workflow.json")")
 
 fixture repos/owner/repo/issues/1 <<< '{"state": "open", "labels": []}'
 fixture repos/owner/repo/issues/2 <<< '{"state": "open", "labels": [{"name": "needs-validation"}]}'
@@ -104,17 +68,4 @@ expect refuse "$step" 'AGENTS.md without the label' PR=12 RULES_CHANGE=false
 expect refuse "$step" 'docs/rules/ without the label' PR=13 RULES_CHANGE=false
 expect refuse "$step" 'protected file renamed away without the label' PR=14 RULES_CHANGE=false
 
-while IFS= read -r name; do
-  for kind in accept refuse; do
-    if ! grep -qxF "$name" "$tmp/seen.$kind"; then
-      echo "FAIL  step without a test for $kind: $name"
-      failures=1
-    fi
-  done
-done < <(jq -r '.jobs.policy.steps[].name' "$tmp/workflow.json")
-
-if [ "$failures" -ne 0 ]; then
-  echo "test-policy: some tests failed."
-  exit 1
-fi
-echo "test-policy: all tests passed."
+finish test-policy

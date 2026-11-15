@@ -47,6 +47,8 @@ docs/
 scripts/                          propre à orbit-agent, non copié
 ├── check                         la commande check d'orbit-agent
 ├── test-policy                   les tests du check policy
+├── test-code                     les tests du check code
+├── test-lib                      les fonctions communes à ces tests
 └── fake-gh                       le faux gh utilisé par ces tests
 ```
 
@@ -67,7 +69,13 @@ l'agent : deux checks les vérifient sur chaque PR.
   - aucun secret n'est présent dans les commits (gitleaks, appelé
     directement : l'action `gitleaks/gitleaks-action` exige une licence
     `GITLEAKS_LICENSE` pour les dépôts d'organisation) ;
-  - la commande `check` du projet passe (à compléter à l'installation).
+  - la section 2 d'`AGENTS.md` est remplie : ni placeholder entre crochets,
+    ni `TBD` ;
+  - la commande `check` du projet passe. Tant que l'étape `Check` n'a pas
+    été remplacée à l'installation, elle échoue.
+
+Un projet sans commande `check` n'a donc pas de check `code` vert : c'est
+voulu, y compris pour un projet qui démarre.
 
 `policy` tourne sur `pull_request_target` : c'est la version de la main branch
 qui s'exécute, sans checkout du code de la PR. Une PR ne peut donc pas
@@ -102,14 +110,19 @@ validée. L'humain retire aussi le label de ses propres issues.
 
 - actionlint sur `.github/workflows/` ;
 - shellcheck sur les scripts des workflows et sur `scripts/` ;
-- `scripts/test-policy`, les tests du check `policy`.
+- `scripts/test-policy` et `scripts/test-code`, les tests des checks `policy`
+  et `code`.
 
 Il demande `actionlint`, `shellcheck`, `jq` et `ruby` installés.
 
-`scripts/test-policy` exécute le script de chaque étape d'`orbit-policy.yml`,
-lu dans le workflow lui-même, avec un faux `gh` qui renvoie des réponses
-préparées. Chaque étape doit avoir au moins un cas accepté et un cas refusé :
-une étape ajoutée sans test fait échouer le check.
+Ces tests exécutent le script de chaque étape, lu dans le workflow lui-même,
+avec un faux `gh` qui renvoie des réponses préparées. Chaque étape doit avoir
+au moins un cas accepté et un cas refusé : une étape ajoutée sans test fait
+échouer le check. Seule l'étape gitleaks d'`orbit.yml` n'est pas testée.
+
+Dans ce dépôt, les deux étapes d'`orbit.yml` qui vérifient la configuration
+du projet passent toujours : orbit-agent est le modèle, il garde ses
+placeholders.
 
 `.github/workflows/orbit-self.yml` le lance sur chaque PR (check `self`). Ce
 workflow et `scripts/` sont propres à orbit-agent : l'installation ne les copie
@@ -137,10 +150,14 @@ s'adapte et pose des questions pour ce qu'il ne peut pas déduire.
    dépôt GitHub.
 3. Remplir la section 2 d'`AGENTS.md` et `docs/context/architecture.md`, en
    suivant les consignes en commentaire.
-4. Compléter l'étape `check` de `.github/workflows/orbit.yml`.
+4. Remplacer l'étape `Check` de `.github/workflows/orbit.yml` par
+   l'installation de la stack et la commande `check` du projet. Tant que ce
+   n'est pas fait, le check `code` échoue.
 5. Protéger la main branch (*Settings → Rules → Rulesets*) : exiger
    une PR, exiger que les checks `policy` et `code` passent, interdire le
-   `push --force`.
+   `push --force`. Pour un projet qui démarre, merger d'abord la PR
+   d'installation : son check `code` est rouge tant que le projet n'a pas de
+   commande `check`.
 6. Activer la suppression automatique des branches mergées (*Settings →
    General → Automatically delete head branches*) : une branche = une issue,
    elle n'a plus de raison d'exister après le merge.
@@ -219,18 +236,23 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
    - **Projet existant** : déduis tout du dépôt, exécute chaque commande avant
      de l'écrire, et marque `TBC` ce qui reste incertain.
    - **Nouveau projet** : demande à l'humain le but, le public et la stack.
-     Les commandes restent `TBD` et l'architecture reste vide.
+     Les commandes restent `TBD` et l'architecture reste vide. Le check
+     `code` échoue tant qu'elles le sont : la première issue du projet
+     initialise la stack et sa commande `check`.
 
    Supprime chaque commentaire de consignes une fois sa partie remplie.
 6. **Complète la CI.** Dans `.github/workflows/orbit.yml`, remplace l'étape
-   `check` en commentaire par l'installation de la stack et la
-   commande `check` de la section 2. Si les commandes sont encore
-   `TBD`, laisse l'étape en commentaire et signale-le.
+   `Check` par l'installation de la stack et la commande `check` de la
+   section 2. Si les commandes sont encore `TBD`, laisse l'étape telle
+   quelle et signale que le check `code` échouera jusqu'à l'initialisation
+   du projet.
 7. **Propose la protection de la main branch** : PR obligatoire, checks
    `policy` et `code` requis, `push --force` interdit. Ne l'active toi-même
    que si l'humain le demande. N'exige pas de review approuvée si les agents
    utilisent le compte GitHub de l'humain : il ne pourrait plus merger
-   leurs PR. Propose aussi la suppression automatique des branches mergées
+   leurs PR. Pour un projet qui démarre, préviens que la PR d'installation
+   doit être mergée avant : son check `code` est rouge. Propose aussi la
+   suppression automatique des branches mergées
    (`gh repo edit --delete-branch-on-merge`).
 8. **Signale les écarts avec l'existant.** Si le projet a déjà ses propres
    conventions (format de commit, nommage des branches, outils de test),

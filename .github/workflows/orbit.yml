@@ -35,7 +35,29 @@ jobs:
           ./gitleaks git --no-banner --redact --verbose \
             --log-opts="--no-merges $BASE..$HEAD" "$GITHUB_WORKSPACE"
 
-      # À remplir à l'installation : la commande `check` de la
-      # section 2 d'AGENTS.md, précédée de l'installation de la stack.
-      # - name: Check
-      #   run: npm run check
+      - name: Project section of AGENTS.md is filled
+        run: |
+          if [ "$GITHUB_REPOSITORY" = tabiitha/orbit-agent ]; then
+            echo "orbit-agent is the template: its placeholders stay."
+            exit 0
+          fi
+          section=$(awk '/^## 2\./ { on = 1; next } /^## / { on = 0 } on' AGENTS.md 2> /dev/null || true)
+          if [ -z "$section" ]; then
+            echo "::error::Section 2 of AGENTS.md not found: AGENTS.md must exist and have a '## 2.' heading."
+            exit 1
+          fi
+          left=$(grep -E '\[[^]]+\]([^(]|$)|(^|[^A-Za-z])TBD([^A-Za-z]|$)' <<< "$section" || true)
+          if [ -n "$left" ]; then
+            echo "::error::Section 2 of AGENTS.md still has placeholders or TBD. Fill each field, then delete the instructions comment."
+            echo "$left"
+            exit 1
+          fi
+
+      - name: Check
+        run: |
+          if [ "$GITHUB_REPOSITORY" = tabiitha/orbit-agent ]; then
+            echo "orbit-agent is the template: its own check is orbit-self.yml."
+            exit 0
+          fi
+          echo "::error::No check command is configured. Replace this step with the setup of the stack and the check command from section 2 of AGENTS.md."
+          exit 1

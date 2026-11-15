@@ -13,3 +13,4 @@ done
 actionlint -shellcheck "$(command -v shellcheck)"
 shellcheck scripts/*
 scripts/test-policy
+scripts/test-code

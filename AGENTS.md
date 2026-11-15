@@ -57,7 +57,7 @@ Dans les deux cas, reste court : le détail va dans docs/context/.
 | Installer | [ex. `npm install`] |
 | Lancer en local | [ex. `npm run dev`] |
 | Tester | [ex. `npm test`] |
-| Check (lint, types, tests) | [ex. `npm run check`] |
+| Check (format, lint, types, tests) | [ex. `npm run check`] |
 
 **Organisation du code** : [Les 3 à 5 dossiers principaux et leur rôle.]
 > Exemple : `src/routes/` (endpoints HTTP), `src/domain/` (logique métier), `src/db/` (accès aux données).

@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+workflow=.github/workflows/orbit-policy.yml
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+mkdir "$tmp/bin" "$tmp/fixtures"
+cp scripts/fake-gh "$tmp/bin/gh"
+touch "$tmp/seen.accept" "$tmp/seen.refuse"
+
+ruby -ryaml -rjson -e 'puts JSON.generate(YAML.load_file(ARGV[0]))' "$workflow" > "$tmp/workflow.json"
+cc_pattern=$(jq -r '.jobs.policy.env.CC_PATTERN' "$tmp/workflow.json")
+
+failures=0
+
+fixture() {
+  mkdir -p "$(dirname "$tmp/fixtures/$1")"
+  cat > "$tmp/fixtures/$1.json"
+}
+
+expect() {
+  local expected=$1 step=$2 label=$3
+  shift 3
+  local script status=0
+  script=$(jq -r --arg name "$step" '.jobs.policy.steps[] | select(.name == $name) | .run' "$tmp/workflow.json")
+  if [ -z "$script" ]; then
+    echo "FAIL  no step named: $step"
+    failures=1
+    return
+  fi
+  env PATH="$tmp/bin:$PATH" FIXTURES="$tmp/fixtures" GH_REPO=owner/repo CC_PATTERN="$cc_pattern" "$@" \
+    bash -e -c "$script" > "$tmp/output" 2>&1 || status=$?
+  echo "$step" >> "$tmp/seen.$expected"
+  if { [ "$expected" = accept ] && [ "$status" -eq 0 ]; } || { [ "$expected" = refuse ] && [ "$status" -eq 1 ]; }; then
+    echo "ok    $expected: $label"
+  else
+    echo "FAIL  $expected: $label (exit $status)"
+    sed 's/^/        /' "$tmp/output"
+    failures=1
+  fi
+}
+
+fixture repos/owner/repo/issues/1 <<< '{"state": "open", "labels": []}'
+fixture repos/owner/repo/issues/2 <<< '{"state": "open", "labels": [{"name": "needs-validation"}]}'
+fixture repos/owner/repo/issues/3 <<< '{"state": "open", "labels": [{"name": "blocked"}]}'
+fixture repos/owner/repo/issues/4 <<< '{"state": "closed", "labels": []}'
+fixture repos/owner/repo/issues/5 <<< '{"state": "open", "labels": [], "pull_request": {"url": "x"}}'
+
+step='PR is linked to a validated issue'
+expect accept "$step" 'open issue without blocking label' AUTHOR=alice BODY='Closes #1' EXEMPT_BOTS='dependabot[bot] renovate[bot]'
+expect accept "$step" 'lowercase closes keyword' AUTHOR=alice BODY='closes #1' EXEMPT_BOTS='dependabot[bot] renovate[bot]'
+expect accept "$step" 'exempt bot without issue' AUTHOR='dependabot[bot]' BODY='' EXEMPT_BOTS='dependabot[bot] renovate[bot]'
+expect refuse "$step" 'no Closes in the description' AUTHOR=alice BODY='Fixes the bug' EXEMPT_BOTS='dependabot[bot] renovate[bot]'
+expect refuse "$step" 'other bot without issue' AUTHOR='agent[bot]' BODY='' EXEMPT_BOTS='dependabot[bot] renovate[bot]'
+expect refuse "$step" 'issue with needs-validation' AUTHOR=alice BODY='Closes #2' EXEMPT_BOTS='dependabot[bot] renovate[bot]'
+expect refuse "$step" 'issue with blocked' AUTHOR=alice BODY='Closes #3' EXEMPT_BOTS='dependabot[bot] renovate[bot]'
+expect refuse "$step" 'closed issue' AUTHOR=alice BODY='Closes #4' EXEMPT_BOTS='dependabot[bot] renovate[bot]'
+expect refuse "$step" 'pull request instead of an issue' AUTHOR=alice BODY='Closes #5' EXEMPT_BOTS='dependabot[bot] renovate[bot]'
+expect refuse "$step" 'issue not found' AUTHOR=alice BODY='Closes #99' EXEMPT_BOTS='dependabot[bot] renovate[bot]'
+expect refuse "$step" 'one valid issue and one not validated' AUTHOR=alice BODY='Closes #1, closes #2' EXEMPT_BOTS='dependabot[bot] renovate[bot]'
+
+long_title="feat: $(printf 'a%.0s' {1..100})"
+
+step='PR title follows Conventional Commits'
+expect accept "$step" 'type and subject' TITLE='fix: reject overlapping bookings'
+expect accept "$step" 'scope and breaking change' TITLE='feat(api)!: drop the v1 routes'
+expect refuse "$step" 'no type' TITLE='Reject overlapping bookings'
+expect refuse "$step" 'unknown type' TITLE='feature: add CSV export'
+expect refuse "$step" 'uppercase scope' TITLE='fix(API): reject overlapping bookings'
+expect refuse "$step" 'more than 100 characters' TITLE="$long_title"
+
+fixture repos/owner/repo/pulls/10/commits << 'JSON'
+[
+  {"parents": [{}], "commit": {"message": "feat(export): add CSV export of bookings\n\nRefs: #15"}},
+  {"parents": [{}, {}], "commit": {"message": "Merge branch 'main' into feat/15-csv-export"}},
+  {"parents": [{}], "commit": {"message": "test: cover the empty export"}}
+]
+JSON
+fixture repos/owner/repo/pulls/11/commits << 'JSON'
+[
+  {"parents": [{}], "commit": {"message": "feat(export): add CSV export of bookings"}},
+  {"parents": [{}], "commit": {"message": "wip"}}
+]
+JSON
+
+step='Commits follow Conventional Commits'
+expect accept "$step" 'conforming commits, merge commit ignored' PR=10
+expect refuse "$step" 'one commit without a type' PR=11
+
+fixture repos/owner/repo/pulls/10/files <<< '[{"filename": "README.md"}, {"filename": "docs/context/architecture.md"}]'
+fixture repos/owner/repo/pulls/11/files <<< '[{"filename": "README.md"}, {"filename": ".github/workflows/orbit.yml"}]'
+fixture repos/owner/repo/pulls/12/files <<< '[{"filename": "AGENTS.md"}]'
+fixture repos/owner/repo/pulls/13/files <<< '[{"filename": "docs/rules/git.md"}]'
+fixture repos/owner/repo/pulls/14/files <<< '[{"filename": "docs/notes/git.md", "previous_filename": "docs/rules/git.md"}]'
+
+step='Rules and CI only change with the rules-change label'
+expect accept "$step" 'no protected file touched' PR=10 RULES_CHANGE=false
+expect accept "$step" 'protected file with the label' PR=11 RULES_CHANGE=true
+expect refuse "$step" '.github/ without the label' PR=11 RULES_CHANGE=false
+expect refuse "$step" 'AGENTS.md without the label' PR=12 RULES_CHANGE=false
+expect refuse "$step" 'docs/rules/ without the label' PR=13 RULES_CHANGE=false
+expect refuse "$step" 'protected file renamed away without the label' PR=14 RULES_CHANGE=false
+
+while IFS= read -r name; do
+  for kind in accept refuse; do
+    if ! grep -qxF "$name" "$tmp/seen.$kind"; then
+      echo "FAIL  step without a test for $kind: $name"
+      failures=1
+    fi
+  done
+done < <(jq -r '.jobs.policy.steps[].name' "$tmp/workflow.json")
+
+if [ "$failures" -ne 0 ]; then
+  echo "test-policy: some tests failed."
+  exit 1
+fi
+echo "test-policy: all tests passed."

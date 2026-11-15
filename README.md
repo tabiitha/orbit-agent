@@ -44,8 +44,10 @@ docs/
 └── context/                      propre à chaque projet, à remplir
     ├── architecture.md
     └── decisions/
-scripts/
-└── check                         la commande check d'orbit-agent, non copiée
+scripts/                          propre à orbit-agent, non copié
+├── check                         la commande check d'orbit-agent
+├── test-policy                   les tests du check policy
+└── fake-gh                       le faux gh utilisé par ces tests
 ```
 
 ## Vérifications automatiques
@@ -96,9 +98,18 @@ validée. L'humain retire aussi le label de ses propres issues.
 
 ### Le check d'orbit-agent lui-même
 
-`scripts/check` vérifie ce dépôt : actionlint sur `.github/workflows/`, et
-shellcheck sur les scripts des workflows et sur `scripts/check`. Il demande
-`actionlint` et `shellcheck` installés.
+`scripts/check` vérifie ce dépôt :
+
+- actionlint sur `.github/workflows/` ;
+- shellcheck sur les scripts des workflows et sur `scripts/` ;
+- `scripts/test-policy`, les tests du check `policy`.
+
+Il demande `actionlint`, `shellcheck`, `jq` et `ruby` installés.
+
+`scripts/test-policy` exécute le script de chaque étape d'`orbit-policy.yml`,
+lu dans le workflow lui-même, avec un faux `gh` qui renvoie des réponses
+préparées. Chaque étape doit avoir au moins un cas accepté et un cas refusé :
+une étape ajoutée sans test fait échouer le check.
 
 `.github/workflows/orbit-self.yml` le lance sur chaque PR (check `self`). Ce
 workflow et `scripts/` sont propres à orbit-agent : l'installation ne les copie

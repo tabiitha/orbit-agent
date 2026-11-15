@@ -30,6 +30,7 @@ CLAUDE.md                         pointe vers AGENTS.md, pour Claude Code
 └── workflows/
     ├── orbit-issues.yml          pose needs-validation sur toute nouvelle issue
     ├── orbit-policy.yml          vérifie les règles de la PR (check policy)
+    ├── orbit-self.yml            vérifie orbit-agent lui-même (check self), non copié
     └── orbit.yml                 vérifie le code de la PR (check code)
 docs/
 ├── workflow/
@@ -43,6 +44,8 @@ docs/
 └── context/                      propre à chaque projet, à remplir
     ├── architecture.md
     └── decisions/
+scripts/
+└── check                         la commande check d'orbit-agent, non copiée
 ```
 
 ## Vérifications automatiques
@@ -91,6 +94,16 @@ validée. L'humain retire aussi le label de ses propres issues.
 - Retirer un label de l'issue ne relance pas `policy` : relancer le job
   depuis la PR.
 
+### Le check d'orbit-agent lui-même
+
+`scripts/check` vérifie ce dépôt : actionlint sur `.github/workflows/`, et
+shellcheck sur les scripts des workflows et sur `scripts/check`. Il demande
+`actionlint` et `shellcheck` installés.
+
+`.github/workflows/orbit-self.yml` le lance sur chaque PR (check `self`). Ce
+workflow et `scripts/` sont propres à orbit-agent : l'installation ne les copie
+pas dans un projet.
+
 ## Installation
 
 ### Avec un agent (recommandé)
@@ -107,7 +120,8 @@ s'adapte et pose des questions pour ce qu'il ne peut pas déduire.
 ### À la main
 
 1. Copier `AGENTS.md`, `CLAUDE.md`, `.orbit-version`, `docs/` et `.github/` à
-   la racine du projet, sans écraser les fichiers existants.
+   la racine du projet, sans écraser les fichiers existants. Ne pas copier
+   `.github/workflows/orbit-self.yml`.
 2. Créer les labels `needs-validation`, `blocked` et `rules-change` sur le
    dépôt GitHub.
 3. Remplir la section 2 d'`AGENTS.md` et `docs/context/architecture.md`, en
@@ -157,7 +171,9 @@ Les étapes, à la main comme par un agent :
    `docs/rules/` et `.github/`. Le détail se lit dans le clone avec
    `git diff v<version installée> HEAD`. Garder ce que le projet a adapté :
    la section 2 d'`AGENTS.md`, l'étape `check` d'`orbit.yml`, les règles
-   ajoutées par l'humain. Un agent montre chaque fusion à l'humain.
+   ajoutées par l'humain. Ne pas reporter
+   `.github/workflows/orbit-self.yml`. Un agent montre chaque fusion à
+   l'humain.
 4. **Ne pas toucher à `docs/context/`** : il appartient au projet.
 5. **Faire ce que le changelog demande** (labels, checks requis), puis copier
    `.orbit-version`.
@@ -176,7 +192,8 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
    n'est pas encore un dépôt git, demande à l'humain avant de lancer `git init`.
 3. **Copie `AGENTS.md`, `CLAUDE.md`, `.orbit-version`, `docs/` et `.github/`**
    depuis le clone. Ne copie ni ce `README.md`, ni `LICENSE`, ni
-   `CHANGELOG.md`. N'écrase aucun fichier existant : en cas de conflit, montre
+   `CHANGELOG.md`, ni `scripts/`, ni `.github/workflows/orbit-self.yml`.
+   N'écrase aucun fichier existant : en cas de conflit, montre
    les différences à l'humain et propose une fusion.
 4. **Crée les labels** utilisés par le graphe et la CI :
    ```bash

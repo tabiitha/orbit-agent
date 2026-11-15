@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+for tool in actionlint shellcheck; do
+  if ! command -v "$tool" > /dev/null; then
+    echo "check: $tool not found. Install it, then run scripts/check again." >&2
+    exit 1
+  fi
+done
+
+actionlint -shellcheck "$(command -v shellcheck)"
+shellcheck scripts/check

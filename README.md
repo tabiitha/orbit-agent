@@ -7,6 +7,11 @@ développeur de l'équipe.
 Il ne dépend d'aucun langage ni d'aucun outil. Ce sont des fichiers Markdown,
 à copier dans n'importe quel projet.
 
+En retour, il attend du projet un socle de vérifications automatiques :
+formatteur, linter, vérification des types et tests, réunis dans une seule
+commande `check`. Les règles disent à l'agent quoi faire, le socle vérifie
+qu'il l'a fait.
+
 ## Principe
 
 - **`AGENTS.md`** est court et lu à chaque session : la posture, le projet, le
@@ -150,9 +155,11 @@ s'adapte et pose des questions pour ce qu'il ne peut pas déduire.
    dépôt GitHub.
 3. Remplir la section 2 d'`AGENTS.md` et `docs/context/architecture.md`, en
    suivant les consignes en commentaire.
-4. Remplacer l'étape `Check` de `.github/workflows/orbit.yml` par
-   l'installation de la stack et la commande `check` du projet. Tant que ce
-   n'est pas fait, le check `code` échoue.
+4. Poser le socle : réunir dans une commande `check` le formatteur, le
+   linter, la vérification des types (si le langage en a une) et les tests
+   du projet, en ajoutant ce qui manque. Puis remplacer l'étape `Check` de
+   `.github/workflows/orbit.yml` par l'installation de la stack et cette
+   commande. Tant que ce n'est pas fait, le check `code` échoue.
 5. Protéger la main branch (*Settings → Rules → Rulesets*) : exiger
    une PR, exiger que les checks `policy` et `code` passent, interdire le
    `push --force`. Pour un projet qui démarre, merger d'abord la PR
@@ -241,11 +248,20 @@ Si on t'a demandé d'installer orbit-agent dans un projet, suis ces étapes.
      initialise la stack et sa commande `check`.
 
    Supprime chaque commentaire de consignes une fois sa partie remplie.
-6. **Complète la CI.** Dans `.github/workflows/orbit.yml`, remplace l'étape
-   `Check` par l'installation de la stack et la commande `check` de la
-   section 2. Si les commandes sont encore `TBD`, laisse l'étape telle
-   quelle et signale que le check `code` échouera jusqu'à l'initialisation
-   du projet.
+6. **Pose le socle, puis complète la CI.** Le socle, ce sont quatre
+   vérifications réunies dans la commande `check` de la section 2 : format,
+   lint, types (si le langage en a) et tests.
+   - **Projet existant** : relève ce que le projet a déjà. Pour ce qui
+     manque, propose à l'humain un outil et ses réglages, et n'ajoute rien
+     sans son accord. Ce qu'il refuse ou reporte reste hors de `check` :
+     signale-le dans ton résumé.
+   - **Nouveau projet** : le socle est posé par la première issue, celle qui
+     initialise la stack.
+
+   Dans `.github/workflows/orbit.yml`, remplace ensuite l'étape `Check` par
+   l'installation de la stack et la commande `check`. Si les commandes sont
+   encore `TBD`, laisse l'étape telle quelle et signale que le check `code`
+   échouera jusqu'à l'initialisation du projet.
 7. **Propose la protection de la main branch** : PR obligatoire, checks
    `policy` et `code` requis, `push --force` interdit. Ne l'active toi-même
    que si l'humain le demande. N'exige pas de review approuvée si les agents

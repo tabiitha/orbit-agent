@@ -25,7 +25,7 @@ Un [lien](https://example.com) ne compte pas, ni un [crochet] hors de la section
 
 | Action | Commande |
 | --- | --- |
-| Check (lint, types, tests) | `npm run check` |
+| Check (format, lint, types, tests) | `npm run check` |
 
 **État** : En développement. TBC : l'hébergement.
 
@@ -49,7 +49,7 @@ agents tbd << 'MD'
 
 | Action | Commande |
 | --- | --- |
-| Check (lint, types, tests) | TBD |
+| Check (format, lint, types, tests) | TBD |
 
 ## 3. Comment tu travailles une tâche
 MD
